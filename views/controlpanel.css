@@ -1,0 +1,9 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    text-align: center;
+}
+#title {
+    color: #282828;
+    background-color: #e2edff;
+}

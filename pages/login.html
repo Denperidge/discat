@@ -1,0 +1,27 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Catbot</title>
+</head>
+
+<body style="text-align:center;">
+    <span>Logging you in...</span>
+    <script>
+        var accesscode = sessionStorage.getItem("accesscode");
+        // Example response: http://catbot.cloudno.de/login#access_token={TOKEN}&token_type=Bearer&expires_in={TIME}&scope={SCOPE}&state={STATE}
+        if (accesscode == null) {
+            var allparams = window.location.href.split("#")[1];
+            if (allparams == undefined)
+                // if no access code has been supplied, let user get one
+                window.location = "https://discordapp.com/oauth2/authorize?client_id=429761597687463946&redirect_uri=http%3A%2F%2Fcatbot.cloudno.de%2Flogin&response_type=token&scope=guilds";
+            else {
+                sessionStorage.setItem("accesscode", allparams.split("&")[0].replace("access_token=", ""));  // if code has been supplied
+                window.location = "controlpanel";
+            }
+        } else window.location = "controlpanel";
+    </script>
+</body>
+
+</html>
