@@ -1,6 +1,8 @@
+#!/usr/bin/env node
 const Discord = require('discord.js');
 const express = require('express');
 const app = express();
+var handler = require("github-webhook-handler")({path: "/discatupdate", secret: require("./config.json").discatPushSecret });
 
 // Bot
 const client = new Discord.Client();
@@ -33,9 +35,21 @@ app.get("/login", (req, res) => {
 app.get("/controlpanel", (req, res) => {
   res.render("controlpanel");
 });
+handler.on("push", function (event){
+  const spawn = require("child_process").spawn;
+
+  var pull = spawn("git pull");  // Pull the new update
+  pull.on("exit", function(){
+    // Once the update is pulled, make a non-child process that reloads the application
+    var reload = spawn("pm2 reload discat", [], {
+      detached: true,
+      stdio: ["ignore", "ignore", "ignore"]
+    });
+    reload.unref();
+  });
+});
+// Todo: push/pull nieuwe update, remember git credentials on discat, test webhook
 app.get("*", (req, res) => { res.sendFile(__dirname + "/pages/notfound.html"); });
-
-
 
 app.listen(443, () => console.log("Website enabled on port 443"));
 client.login(require("./config.json").discordApiKey);
