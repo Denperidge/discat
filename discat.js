@@ -35,7 +35,7 @@ app.get("/login", (req, res) => {
 app.get("/controlpanel", (req, res) => {
   res.render("controlpanel");
 });
-handler.on("push", function (event){
+handler.on("push", function (event){  // When the Discat repository is updated
   const spawn = require("child_process").spawn;
 
   var pull = spawn("git pull");  // Pull the new update
@@ -48,7 +48,7 @@ handler.on("push", function (event){
     reload.unref();
   });
 });
-// Todo: push/pull nieuwe update, remember git credentials on discat, test webhook
+
 app.get("*", (req, res) => { res.sendFile(__dirname + "/pages/notfound.html"); });
 
 app.listen(443, () => console.log("Website enabled on port 443"));
