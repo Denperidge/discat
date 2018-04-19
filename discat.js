@@ -2,39 +2,44 @@
 const Discord = require('discord.js');
 const express = require('express');
 const app = express();
+const session = require("express-session");
 var handler = require("github-webhook-handler")({path: "/discatupdate", secret: require("./config.json").discatPushSecret });
 
 // Bot
 const client = new Discord.Client();
 
 var commands = {
-  "ping": "pong"
+  "429687446566076427": {
+    "ping": "pong"
+  }
 };
+
+
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 }); // TODO session
 
 client.on('message', msg => {
-  var reply = commands[msg.content];
-  if (msg.author == client.user || reply == null) return;
-  msg.reply(commands[msg.content]);
+  var guild; var reply;
+  if (msg.author == client.user || commands[(guild = msg.guild.id)] == null) return;
+  if ((reply=commands[guild][msg.content]) == null) return;
+  msg.reply(reply);
 });
 
 
 // Website
 app.set("view engine", "pug");
-app.use(express.static("pages/public"));
+app.use(session({
+  secret: "kokop54sdf56fgfgs849fzer",
+  resave: false,
+  saveUninitialized: false,
+}));
 
+app.get("/server", (req, res) => {
+  res.render("selectserver");
+});
 
-app.get("/", (req, res) => { res.sendFile(__dirname + "/pages/index.html"); });
-app.get("/login", (req, res) => {
-  if (req == undefined) return;
-  res.sendFile(__dirname + "/pages/login.html");
-});
-app.get("/controlpanel", (req, res) => {
-  res.render("controlpanel");
-});
 handler.on("push", function (event){  // When the Discat repository is updated
   const spawn = require("child_process").spawn;
 
