@@ -10,7 +10,9 @@ const client = new Discord.Client();
 
 var commands = {
   "429687446566076427": {
-    "ping": "pong"
+    "ping": function(msg){
+      msg.reply("pong");
+    }
   }
 };
 
@@ -23,8 +25,8 @@ client.on('ready', () => {
 client.on('message', msg => {
   var guild; var reply;
   if (msg.author == client.user || commands[(guild = msg.guild.id)] == null) return;
-  if ((reply=commands[guild][msg.content]) == null) return;
-  msg.reply(reply);
+  if ((reply=commands[guild][msg.content.toLowerCase()]) == null) return;
+  reply(msg);
 });
 
 
