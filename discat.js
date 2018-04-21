@@ -56,5 +56,5 @@ handler.on("push", function (event){  // When the Discat repository is updated
   });
 });
 
-app.listen(443, () => console.log("Website enabled on port 443"));
+app.listen(3000, () => console.log("Website enabled on port 3000"));
 client.login(require("./config.json").discordApiKey);
