@@ -43,6 +43,7 @@ app.get("/server", (req, res) => {
 });
 
 handler.on("push", function (event){  // When the Discat repository is updated
+  console.log(event);
   const spawn = require("child_process").spawn;
 
   var pull = spawn("git pull");  // Pull the new update
