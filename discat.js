@@ -54,7 +54,5 @@ handler.on("push", function (event){  // When the Discat repository is updated
   });
 });
 
-app.get("*", (req, res) => { res.sendFile(__dirname + "/pages/notfound.html"); });
-
 app.listen(443, () => console.log("Website enabled on port 443"));
 client.login(require("./config.json").discordApiKey);
