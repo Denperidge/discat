@@ -43,7 +43,7 @@ app.get("/server", (req, res) => {
 });
 
 handler.on('error', function (err) {
-  console.error('Error:', err.message);
+  console.log('Error:', err.message);
 });
 
 handler.on("push", function (event){  // When the Discat repository is updated
