@@ -42,6 +42,10 @@ app.get("/server", (req, res) => {
   res.render("selectserver");
 });
 
+handler.on('error', function (err) {
+  console.error('Error:', err.message);
+});
+
 handler.on("push", function (event){  // When the Discat repository is updated
   console.log(event);
   const spawn = require("child_process").spawn;  // Require the spawn function
