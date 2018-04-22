@@ -47,7 +47,8 @@ handler.on('error', function (err) {
   console.log('Error:', err.message);
 });
 
-app.post("/discatupdate",  function (req, res) { 
+app.post("/discatupdate",  function (req, res) {
+  console.log(req.headers);
   console.log(req.body);
 });
 
