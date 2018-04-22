@@ -32,6 +32,7 @@ client.on('message', msg => {
 
 // Website
 app.set("view engine", "pug");
+app.use(require("body-parser").json());
 app.use(session({
   secret: "kokop54sdf56fgfgs849fzer",
   resave: false,
