@@ -61,7 +61,7 @@ app.post("/discatupdate", function (req, res) {
           var moveDiscatConf = spawn("cp", ["nginx/discat.conf", "/etc/nginx/conf.d/discat.conf"]);  // copy discat.conf to etc/nginx/conf.d/
           moveDiscatConf.on("exit", function () {  // Once discat.conf has been copied
             console.log("[] Reloading nginx...");
-            var reloadNginx = spawn("sudo"["nginx", "-s", "reload"]);  // Reload nginx
+            var reloadNginx = spawn("sudo nginx", ["-s", "reload"]);  // Reload nginx
             reloadNginx.on("exit", function () {  // Once nginx has been reloaded
               // make a non-child process that reloads discat.js
               console.log("[] Reloading pm2...");
