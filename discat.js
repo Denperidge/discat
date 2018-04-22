@@ -56,7 +56,7 @@ app.post("/discatupdate", function (req, res) {
     console.log("Yeet");
   else console.log("no yeet");
 
-  console.log(req.headers.x - hub - signature);
+  console.log(req.headers);
   console.log(req.body);
 
   // req.body.ref == refs/heads/master 
