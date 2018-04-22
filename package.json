@@ -8,6 +8,7 @@
   },
   "author": "StijnDotExe",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "discord.js": "^11.3.2",
     "erlpack": "github:discordapp/erlpack",
     "express": "^4.16.3",
