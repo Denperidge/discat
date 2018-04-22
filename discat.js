@@ -47,6 +47,10 @@ handler.on('error', function (err) {
   console.log('Error:', err.message);
 });
 
+app.post("/discatupdate",  function (req, res) { 
+  console.log(req.body);
+});
+
 handler.on("push", function (event){  // When the Discat repository is updated
   console.log(event);
   const spawn = require("child_process").spawn;  // Require the spawn function
