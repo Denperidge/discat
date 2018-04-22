@@ -1,2 +1,7 @@
-scp -r discat.conf stijn@discat.website:"/etc/nginx/conf.d/discat.conf"
+echo "Copy local discat.conf to server home"
+scp -r discat.conf stijn@discat.website:"~stijn/discat.conf"
+echo "Move conf from server home to nginx/conf.d"
+ssh -t stijn@discat.website "sudo mv ~stijn/discat.conf /etc/nginx/conf.d/discat.conf"
+echo "Restart nginx"
+ssh -t stijn@discat.website "sudo nginx -s reload"
 read -p "Done!"
