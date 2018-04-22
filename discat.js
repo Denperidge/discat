@@ -52,7 +52,7 @@ handler.on("push", function (event){  // When the Discat repository is updated
     moveNginxConf.on("exit", function(){  // Once the update is pulled
       var moveDiscatConf = spawn("cp nginx/discat.conf /etc/nginx/conf.d/discat.conf");  // copy nginx.confto the required directory
       moveDiscatConf.on("exit", function(){  // Once the config files have been moved
-        var reloadNginx = spawn("nginx -s reload");  // Reload nginx
+        var reloadNginx = spawn("sudo nginx -s reload");  // Reload nginx
         reloadNginx.on("exit", function(){  // Once nginx has been reloaded
           //make a non-child process that reloads discat.js
           var reloadDiscat = spawn("pm2 reload discat", [], {
