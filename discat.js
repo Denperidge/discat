@@ -51,7 +51,7 @@ app.post("/discatupdate", function (req, res) {
   const crypto = require("crypto");
 
   if (crypto.timingSafeEqual(
-    new Buffer(req.headers.x - hub - signature),
+    new Buffer(req.headers["x-hub-signature"]),
     new Buffer("sha1=" + crypto.createHmac("sha1", require("./config.json").discatPushSecret).update(req.body).digest("hex"))))
     console.log("Yeet");
   else console.log("no yeet");
