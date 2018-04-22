@@ -55,15 +55,15 @@ app.post("/discatupdate", function (req, res) {
       var pull = spawn("git", ["pull"]);  // Pull the new update from github
       pull.on("exit", function () {  // Once the update has been pulled
         console.log("[] Moving 1...");
-        var moveNginxConf = spawn("cp", ["nginx/nginx.conf", "/etc/nginx/nginx.conf"]);  // Pull the new update from github
-        moveNginxConf.on("exit", function () {  // Once the update is pulled
+        var moveNginxConf = spawn("cp", ["nginx/nginx.conf", "/etc/nginx/nginx.conf"]);  // copy nginx.conf to /etc/nginx/
+        moveNginxConf.on("exit", function () {  // Once nginx.conf has been copied
           console.log("[] Moving 2...");
-          var moveDiscatConf = spawn("cp", ["nginx/discat.conf",  "/etc/nginx/conf.d/discat.conf"]);  // copy nginx.conf to the required directory
-          moveDiscatConf.on("exit", function () {  // Once the config files have been moved
+          var moveDiscatConf = spawn("cp", ["nginx/discat.conf", "/etc/nginx/conf.d/discat.conf"]);  // copy discat.conf to etc/nginx/conf.d/
+          moveDiscatConf.on("exit", function () {  // Once discat.conf has been copied
             console.log("[] Reloading nginx...");
-            var reloadNginx = spawn("sudo" ["nginx", "-s", "reload"]);  // Reload nginx
+            var reloadNginx = spawn("sudo"["nginx", "-s", "reload"]);  // Reload nginx
             reloadNginx.on("exit", function () {  // Once nginx has been reloaded
-              //make a non-child process that reloads discat.js
+              // make a non-child process that reloads discat.js
               console.log("[] Reloading pm2...");
               var reloadDiscat = spawn("pm2", ["reload", "discat"], {
                 detached: true,
