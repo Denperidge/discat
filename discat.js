@@ -51,15 +51,20 @@ app.post("/discatupdate", function (req, res) {
     ) {
       const spawn = require("child_process").spawn;  // Require the spawn function
 
+      console.log("[] pulling...");
       var pull = spawn("git", ["pull"]);  // Pull the new update from github
       pull.on("exit", function () {  // Once the update has been pulled
+        console.log("[] Moving 1...");
         var moveNginxConf = spawn("cp", ["nginx/nginx.conf", "/etc/nginx/nginx.conf"]);  // Pull the new update from github
         moveNginxConf.on("exit", function () {  // Once the update is pulled
+          console.log("[] Moving 2...");
           var moveDiscatConf = spawn("cp" ["nginx/discat.conf", "/etc/nginx/conf.d/discat.conf"]);  // copy nginx.confto the required directory
           moveDiscatConf.on("exit", function () {  // Once the config files have been moved
+            console.log("[] Reloading nginx...");
             var reloadNginx = spawn("sudo nginx" ["-s", "reload"]);  // Reload nginx
             reloadNginx.on("exit", function () {  // Once nginx has been reloaded
               //make a non-child process that reloads discat.js
+              console.log("[] Reloading pm2...");
               var reloadDiscat = spawn("pm2", ["reload", "discat"], {
                 detached: true,
                 stdio: ["ignore", "ignore", "ignore"]
