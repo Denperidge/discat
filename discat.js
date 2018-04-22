@@ -3,7 +3,6 @@ const Discord = require('discord.js');
 const express = require('express');
 const app = express();
 const session = require("express-session");
-var handler = require("github-webhook-handler")({ path: "/discatupdate", secret: require("./config.json").discatPushSecret });
 
 // Bot
 const client = new Discord.Client();
@@ -43,47 +42,41 @@ app.get("/server", (req, res) => {
   res.render("selectserver");
 });
 
-handler.on('error', function (err) {
-  console.log('Error:', err.message);
-});
-
 app.post("/discatupdate", function (req, res) {
-  const crypto = require("crypto");
+  try {
+    const crypto = require("crypto");
+    if (crypto.timingSafeEqual(
+      new Buffer(req.headers["x-hub-signature"]),
+      new Buffer(("sha1=" + crypto.createHmac("sha1", require("./config.json").discatPushSecret).update(JSON.stringify(req.body)).digest("hex"))))
+    ) {
+      const spawn = require("child_process").spawn;  // Require the spawn function
 
-  if (crypto.timingSafeEqual(
-    new Buffer(req.headers["x-hub-signature"]),
-    new Buffer(("sha1=" + crypto.createHmac("sha1", require("./config.json").discatPushSecret).update(JSON.stringify(req.body)).digest("hex")))))
-    console.log("Yeet");
-  else console.log("no yeet");
-
-  console.log(req.headers);
-  console.log(req.body);
-
-  // req.body.ref == refs/heads/master 
-});
-
-handler.on("push", function (event) {  // When the Discat repository is updated
-  console.log(event);
-  const spawn = require("child_process").spawn;  // Require the spawn function
-
-  var pull = spawn("git pull");  // Pull the new update from github
-  pull.on("exit", function () {  // Once the update has been pulled
-    var moveNginxConf = spawn("cp nginx/nginx.conf /etc/nginx/nginx.conf");  // Pull the new update from github
-    moveNginxConf.on("exit", function () {  // Once the update is pulled
-      var moveDiscatConf = spawn("cp nginx/discat.conf /etc/nginx/conf.d/discat.conf");  // copy nginx.confto the required directory
-      moveDiscatConf.on("exit", function () {  // Once the config files have been moved
-        var reloadNginx = spawn("sudo nginx -s reload");  // Reload nginx
-        reloadNginx.on("exit", function () {  // Once nginx has been reloaded
-          //make a non-child process that reloads discat.js
-          var reloadDiscat = spawn("pm2 reload discat", [], {
-            detached: true,
-            stdio: ["ignore", "ignore", "ignore"]
+      var pull = spawn("git pull");  // Pull the new update from github
+      pull.on("exit", function () {  // Once the update has been pulled
+        var moveNginxConf = spawn("cp nginx/nginx.conf /etc/nginx/nginx.conf");  // Pull the new update from github
+        moveNginxConf.on("exit", function () {  // Once the update is pulled
+          var moveDiscatConf = spawn("cp nginx/discat.conf /etc/nginx/conf.d/discat.conf");  // copy nginx.confto the required directory
+          moveDiscatConf.on("exit", function () {  // Once the config files have been moved
+            var reloadNginx = spawn("sudo nginx -s reload");  // Reload nginx
+            reloadNginx.on("exit", function () {  // Once nginx has been reloaded
+              //make a non-child process that reloads discat.js
+              var reloadDiscat = spawn("pm2 reload discat", [], {
+                detached: true,
+                stdio: ["ignore", "ignore", "ignore"]
+              });
+              reloadDiscat.unref();
+              res.send("Discat updated!");
+            });
           });
-          reloadDiscat.unref();
         });
       });
-    });
-  });
+    }
+    else throw "Authentication failed";
+  } catch (e) {
+    console.log(e);
+    res.send("Post failed!")
+  }
+  // req.body.ref == refs/heads/master 
 });
 
 app.listen(3000, () => console.log("Website enabled on port 3000"));
