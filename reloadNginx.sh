@@ -1,1 +1,0 @@
-sudo nginx -s reload
