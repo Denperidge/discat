@@ -44,16 +44,25 @@ app.get("/server", (req, res) => {
 
 handler.on("push", function (event){  // When the Discat repository is updated
   console.log(event);
-  const spawn = require("child_process").spawn;
+  const spawn = require("child_process").spawn;  // Require the spawn function
 
-  var pull = spawn("git pull");  // Pull the new update
-  pull.on("exit", function(){
-    // Once the update is pulled, make a non-child process that reloads the application
-    var reload = spawn("pm2 reload discat", [], {
-      detached: true,
-      stdio: ["ignore", "ignore", "ignore"]
+  var pull = spawn("git pull");  // Pull the new update from github
+  pull.on("exit", function(){  // Once the update has been pulled
+    var moveNginxConf = spawn("cp nginx/nginx.conf /etc/nginx/nginx.conf");  // Pull the new update from github
+    moveNginxConf.on("exit", function(){  // Once the update is pulled
+      var moveDiscatConf = spawn("cp nginx/discat.conf /etc/nginx/conf.d/discat.conf");  // copy nginx.confto the required directory
+      moveDiscatConf.on("exit", function(){  // Once the config files have been moved
+        var reloadNginx = spawn("nginx -s reload");  // Reload nginx
+        reloadNginx.on("exit", function(){  // Once nginx has been reloaded
+          //make a non-child process that reloads discat.js
+          var reloadDiscat = spawn("pm2 reload discat", [], {
+            detached: true,
+            stdio: ["ignore", "ignore", "ignore"]
+          });
+          reloadDiscat.unref();
+        });
+      });
     });
-    reload.unref();
   });
 });
 
