@@ -99,6 +99,6 @@ app.listen(3000, () =>
     var time = date.toLocaleTimeString();
     var startupTime = `[${day}-${month}-${year} ${time}]`;
 
-    console.log(startupTime + " Website enabled on port 3000")
+    console.log(startupTime + " Website enabled on port 3000");
   });
 client.login(require("./config.json").discordApiKey);
