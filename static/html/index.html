@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Catbot</title>
+    <title>Discat</title>
 
     <style>
         body {
@@ -21,6 +21,7 @@
             background-color: #ffaf0f;
             height: 60%;
             font-size: 25px;
+            min-height: 385px;
         }
 
         #catbot {
@@ -37,15 +38,25 @@
         }
 
         #bottombar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            height: 40%;
+            min-height: 255px;
+
             color: white;
             background-color: #282828;
-            height: 40%;
-            text-align: center;
+            text-align: center; 
         }
 
         #bottombar button {
-            margin-top: 20%;
+            /*display: table-cell;
+            vertical-align: middle;*/
             padding: 10px 30px;
+            /*width: 80px;
+            height: 200px;*/
+            margin: auto;
             color: #282828;
             background-color: #ffaf0f;
             border: none;
@@ -58,7 +69,7 @@
     <div id="topbar">
         <br>
         <div id="catbot">
-            <img src="catbot.png"/>
+            <img src="catbot.png" />
         </div>
         <h1>Catbot</h1>
         <span>The bot that only does what YOU want</span>
