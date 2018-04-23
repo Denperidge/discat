@@ -18,7 +18,16 @@ var commands = {
 
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  var date = new Date();
+  var day = date.getDate();
+  if (day.toString().length == 1) day = "0" + day;
+  var month = date.getMonth() + 1;
+  if (month.toString().length == 1) month = "0" + month;
+  var year = date.getFullYear();
+  var time = date.toLocaleTimeString();
+  var startupTime = `[${day}-${month}-${year} ${time}]`;
+
+  console.log(`${startupTime} Logged in as ${client.user.tag}!`);
 }); // TODO session
 
 client.on('message', msg => {
@@ -79,5 +88,17 @@ app.post("/discatupdate", function (req, res) {
   // req.body.ref == refs/heads/master 
 });
 
-app.listen(3000, () => console.log("Website enabled on port 3000"));
+app.listen(3000, () => 
+  {
+    var date = new Date();
+    var day = date.getDate();
+    if (day.toString().length == 1) day = "0" + day;
+    var month = date.getMonth() + 1;
+    if (month.toString().length == 1) month = "0" + month;
+    var year = date.getFullYear();
+    var time = date.toLocaleTimeString();
+    var startupTime = `[${day}-${month}-${year} ${time}]`;
+
+    console.log(startupTime + " Website enabled on port 3000")
+  });
 client.login(require("./config.json").discordApiKey);
