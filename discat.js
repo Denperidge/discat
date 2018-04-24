@@ -62,8 +62,8 @@ app.get("/auth", (req,res) => {
   var options = {
     url: "https://discordapp.com/api/v6/oauth2/token",
     body: {
-      "client_id": client_id,
-      "client_secret": client_secret,
+      "client_id": discat_client_id,
+      "client_secret": discat_client_secret,
       "grant_type": "authorization_code",
       "code": req.query.code,
       "redirect_uri": "https://discat.website/auth"
