@@ -4,8 +4,8 @@ const express = require('express');
 const app = express();
 const session = require("express-session");
 const request = require("request");
-const client_id = require("./config.json").client_id;
-const client_secret = require("./config.json").client_secret;
+const client_id = require("./config.json").discat_client_id;
+const client_secret = require("./config.json").discat_client_secret;
 
 // Bot
 const client = new Discord.Client();
