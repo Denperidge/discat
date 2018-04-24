@@ -63,15 +63,16 @@ app.get("/login", (req,res) => {
 app.get("/auth", (req,res) => {
 
   var options = {
-    url: "https://discordapp.com/api/v6/oauth2/token",
+    url: "https://discordapp.com/api/oauth2/token",
     form: {
-      "client_id": discat_client_id,
-      "client_secret": discat_client_secret,
+      "client_id": client.id,
+      "client_secret": client.secret,
       "grant_type": "authorization_code",
       "code": req.query.code,
       "redirect_uri": "https://discat.website/auth"
     },
     headers: {
+      "Authorization": "Bot " + require("./config.json").discat_api_key,
       "Content-Type": "application/x-www-form-urlencoded"
     }
   }
