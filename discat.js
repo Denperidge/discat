@@ -88,7 +88,7 @@ app.post("/discatupdate", function (req, res) {
     const crypto = require("crypto");
     if (crypto.timingSafeEqual(
       new Buffer(req.headers["x-hub-signature"]),
-      new Buffer(("sha1=" + crypto.createHmac("sha1", require("./config.json").discatPushSecret).update(JSON.stringify(req.body)).digest("hex"))))
+      new Buffer(("sha1=" + crypto.createHmac("sha1", require("./config.json").discat_repository_webhook_secret).update(JSON.stringify(req.body)).digest("hex"))))
     ) {
       const spawn = require("child_process").spawn;  // Require the spawn function
 
@@ -133,4 +133,4 @@ app.listen(3000, () =>
 
     console.log(startupTime + " Website enabled on port 3000");
   });
-client.login(require("./config.json").discordApiKey);
+client.login(require("./config.json").discat_api_key);
