@@ -4,8 +4,6 @@ const express = require('express');
 const app = express();
 const session = require("express-session");
 const request = require("request");
-const discat_client_id = require("./config.json").discat_client_id;
-const discat_client_secret = require("./config.json").discat_client_secret;
 
 // Bot
 const client = new Discord.Client();
@@ -31,6 +29,10 @@ client.on('ready', () => {
   var startupTime = `[${day}-${month}-${year} ${time}]`;
 
   console.log(`${startupTime} Logged in as ${client.user.tag}!`);
+
+  // Store client id and secret in client object
+  client.id = require("./config.json").discat_client_id;
+  client.secret = require("./config.json").discat_client_secret;
 }); // TODO session
 
 client.on('message', msg => {
@@ -59,9 +61,10 @@ app.get("/login", (req,res) => {
 });
 
 app.get("/auth", (req,res) => {
+
   var options = {
     url: "https://discordapp.com/api/v6/oauth2/token",
-    body: {
+    form: {
       "client_id": discat_client_id,
       "client_secret": discat_client_secret,
       "grant_type": "authorization_code",
