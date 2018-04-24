@@ -3,6 +3,9 @@ const Discord = require('discord.js');
 const express = require('express');
 const app = express();
 const session = require("express-session");
+const request = require("request");
+const client_id = require("./config.json").client_id;
+const client_secret = require("./config.json").client_secret;
 
 // Bot
 const client = new Discord.Client();
@@ -46,6 +49,35 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
 }));
+
+app.get("/login", (req,res) => {
+  if (req.session.authToken != null){  // If user is logged in
+    res.redirect("/select");  // let him select server or user settings
+  }  // If user isn't logged in
+  else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /auth
+    "https://discordapp.com/api/oauth2/authorize?client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Fauth&response_type=code&scope=guilds");
+});
+
+app.get("/auth", (req,res) => {
+  var options = {
+    url: "https://discordapp.com/api/v6/oauth2/token",
+    body: {
+      "client_id": client_id,
+      "client_secret": client_secret,
+      "grant_type": "authorization_code",
+      "code": req.query.code,
+      "redirect_uri": "https://discat.website/auth"
+    },
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  }
+  request.post(options, (error, response, body) => {
+    console.log(error);
+    console.log(response);
+    console.log(body);
+  });
+});
 
 app.get("/server", (req, res) => {
   res.render("selectserver");
