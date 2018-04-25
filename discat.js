@@ -49,8 +49,8 @@ app.use(require("body-parser").json());
 app.set("trust proxy", 1);  // Trust NGINX
 app.use(session({
   secret: "kokop54sdf56fgfgs849fzer",
-  /*resave: false,
-  saveUninitialized: false,*/
+  resave: false,
+  saveUninitialized: false,
   cookie: {
     maxAge: 518400000,  // 6 days. Every 5 days the tokens are refreshhed, so this is more than necessary
     sameSite: true,
