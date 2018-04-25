@@ -53,8 +53,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 518400000,  // 6 days. Every 5 days the tokens are refreshhed, so this is more than necessary
-    sameSite: true//,
-    //secure: true
+    sameSite: true,
+    secure: true
   }
 }));
 
