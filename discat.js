@@ -50,10 +50,15 @@ app.use(session({
   secret: "kokop54sdf56fgfgs849fzer",
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    maxAge: 518400000,  // 6 days. Every 5 days the tokens are refreshhed, so this is more than necessary
+    sameSite: true,
+    secure: true
+  }
 }));
 
 app.get("/login", (req,res) => {
-  if (req.session.authToken != null){  // If user is logged in
+  if (req.session.accessToken != null){  // If user is logged in
     res.redirect("/select");  // let him select server or user settings
   }  // If user isn't logged in
   else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /auth
@@ -61,25 +66,25 @@ app.get("/login", (req,res) => {
 });
 
 app.get("/auth", (req,res) => {
-
   var options = {
     url: "https://discordapp.com/api/oauth2/token",
     form: {
       "client_id": client.id,
       "client_secret": client.secret,
-      "grant_type": "authorization_code",
+      "grant_type": "client_credentials",
       "code": req.query.code,
       "redirect_uri": "https://discat.website/auth"
     },
     headers: {
-      "Authorization": "Bot " + require("./config.json").discat_api_key,
       "Content-Type": "application/x-www-form-urlencoded"
     }
   }
   request.post(options, (error, response, body) => {
-    console.log(error);
-    console.log(response);
-    console.log(body);
+    if (error) throw error;
+    var token = JSON.parse(body);
+    req.session.accessToken = token.token_type + " " + token.access_token;
+    console.log(req.session.accessToken);
+    res.redirect("/login");
   });
 });
 
