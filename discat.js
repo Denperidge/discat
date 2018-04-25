@@ -52,9 +52,9 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 518400000,  // 6 days. Every 5 days the tokens are refreshhed, so this is more than necessary
-    sameSite: true,
-    secure: true
+    maxAge: 518400000//,  // 6 days. Every 5 days the tokens are refreshhed, so this is more than necessary
+    //sameSite: true,
+    //secure: true
   }
 }));
 
@@ -86,10 +86,8 @@ app.get("/auth", (req,res) => {
     var token = JSON.parse(body);
     req.session.accessToken = token.token_type + " " + token.access_token;
     console.log(req.session.accessToken);
-    req.session.reload(function (err){
-      if (err) throw err;
-      res.redirect("/login");
-    });
+    res.redirect("/login");
+
   });
 });
 
