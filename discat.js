@@ -86,7 +86,10 @@ app.get("/auth", (req,res) => {
     var token = JSON.parse(body);
     req.session.accessToken = token.token_type + " " + token.access_token;
     console.log(req.session.accessToken);
-    res.redirect("/login");
+    req.session.reload(function (err){
+      if (err) throw err;
+      res.redirect("/login");
+    });
   });
 });
 
