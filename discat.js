@@ -53,11 +53,13 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 518400000,  // 6 days. Every 5 days the tokens are refreshhed, so this is more than necessary
+    sameSite: true,
     secure: true
   }
 }));
 
 app.get("/login", (req,res) => {
+  console.log(req.session.accessToken);
   if (req.session.accessToken != null){  // If user is logged in
     res.redirect("/select");  // let him select server or user settings
   }  // If user isn't logged in
