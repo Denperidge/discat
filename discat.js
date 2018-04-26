@@ -94,7 +94,7 @@ app.get("/auth", (req, res) => {
 });
 
 app.get("/server", (req, res) => {
-  res.render("selectserver");
+  res.render("server");
 });
 
 app.post("/discatupdate", function (req, res) {
