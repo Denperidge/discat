@@ -59,7 +59,6 @@ app.use(session({
 }));
 
 app.get("/login", (req, res) => {
-  console.log(req.session.accessToken);
   if (req.session.accessToken != null) {  // If user is logged in
     res.redirect("/select");  // let him select server or user settings
   }  // If user isn't logged in
@@ -90,9 +89,7 @@ app.get("/auth", (req, res) => {
     if (error) throw error;
     var token = JSON.parse(body);
     req.session.accessToken = token.token_type + " " + token.access_token;
-    console.log(req.session.accessToken);
     res.redirect("/login");
-
   });
 });
 
