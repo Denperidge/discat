@@ -67,6 +67,11 @@ app.get("/login", (req,res) => {
     "https://discordapp.com/api/oauth2/authorize?client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Fauth&response_type=code&scope=guilds");
 });
 
+app.get("/logout", (req,res) => {
+  req.session.accessToken = null;
+  res.redirect("/");
+}); 
+
 app.get("/auth", (req,res) => {
   var options = {
     url: "https://discordapp.com/api/oauth2/token",
