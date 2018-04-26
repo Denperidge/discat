@@ -58,21 +58,21 @@ app.use(session({
   }
 }));
 
-app.get("/login", (req,res) => {
+app.get("/login", (req, res) => {
   console.log(req.session.accessToken);
-  if (req.session.accessToken != null){  // If user is logged in
+  if (req.session.accessToken != null) {  // If user is logged in
     res.redirect("/select");  // let him select server or user settings
   }  // If user isn't logged in
   else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /auth
     "https://discordapp.com/api/oauth2/authorize?client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Fauth&response_type=code&scope=guilds");
 });
 
-app.get("/logout", (req,res) => {
+app.get("/logout", (req, res) => {
   req.session.accessToken = null;
   res.redirect("/");
-}); 
+});
 
-app.get("/auth", (req,res) => {
+app.get("/auth", (req, res) => {
   var options = {
     url: "https://discordapp.com/api/oauth2/token",
     form: {
@@ -105,8 +105,7 @@ app.post("/discatupdate", function (req, res) {
     const crypto = require("crypto");
     if (crypto.timingSafeEqual(
       new Buffer(req.headers["x-hub-signature"]),
-      new Buffer(("sha1=" + crypto.createHmac("sha1", require("./config.json").discat_repository_webhook_secret).update(JSON.stringify(req.body)).digest("hex"))))
-    ) {
+      new Buffer(("sha1=" + crypto.createHmac("sha1", require("./config.json").discat_repository_webhook_secret).update(JSON.stringify(req.body)).digest("hex"))))) {
       const spawn = require("child_process").spawn;  // Require the spawn function
 
       var pull = spawn("git", ["pull"]);  // Pull the new update from github
@@ -137,17 +136,16 @@ app.post("/discatupdate", function (req, res) {
   // req.body.ref == refs/heads/master 
 });
 
-app.listen(3000, () => 
-  {
-    var date = new Date();
-    var day = date.getDate();
-    if (day.toString().length == 1) day = "0" + day;
-    var month = date.getMonth() + 1;
-    if (month.toString().length == 1) month = "0" + month;
-    var year = date.getFullYear();
-    var time = date.toLocaleTimeString();
-    var startupTime = `[${day}-${month}-${year} ${time}]`;
+app.listen(3000, () => {
+  var date = new Date();
+  var day = date.getDate();
+  if (day.toString().length == 1) day = "0" + day;
+  var month = date.getMonth() + 1;
+  if (month.toString().length == 1) month = "0" + month;
+  var year = date.getFullYear();
+  var time = date.toLocaleTimeString();
+  var startupTime = `[${day}-${month}-${year} ${time}]`;
 
-    console.log(startupTime + " Website enabled on port 3000");
-  });
+  console.log(startupTime + " Website enabled on port 3000");
+});
 client.login(require("./config.json").discat_api_key);
