@@ -97,21 +97,15 @@ app.get("/server", (req, res) => {
   // TODO see if, with the identify scope, user ID can be fetched. Resulting in the Discord API being able to handle requests
   // client.users.get("user id");
   var options = {
-    url: "https://discordapp.com/api/users/@me",
+    url: "https://discordapp.com/api/users/@me/guilds",
     headers: {
       "Authorization": req.session.accessToken
     }
   }
   request.get(options, (error, response, body) => {
-    /*
     console.log(error);
     console.log(response);
     console.log(body);
-    */
-   // TODO switch scope from guilds to identify? Or perhaps append identify
-    console.log(body);
-    console.log(JSON.parse(body).id);
-    console.log(client.users.get(JSON.parse(body).id).guilds);
   });
   //res.render("server");
 });
