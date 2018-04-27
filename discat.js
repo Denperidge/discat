@@ -103,9 +103,12 @@ app.get("/server", (req, res) => {
     }
   }
   request.get(options, (error, response, body) => {
+    /*
     console.log(error);
     console.log(response);
     console.log(body);
+    */
+    console.log(client.users.get(body.id));
   });
   //res.render("server");
 });
