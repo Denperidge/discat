@@ -109,7 +109,7 @@ app.get("/server", (req, res) => {
     console.log(body);
     */
    console.log(body);
-    console.log(body.id);
+    console.log(JSON.parse(body).id);
     console.log(client.users.get(body.id));
   });
   //res.render("server");
