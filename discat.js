@@ -107,7 +107,7 @@ app.get("/server", (req, res) => {
     console.log(response);
     console.log(body);
   });
-  res.render("server");
+  //res.render("server");
 });
 
 app.post("/discatupdate", function (req, res) {
