@@ -111,7 +111,7 @@ app.get("/server", (req, res) => {
    // TODO switch scope from guilds to identify? Or perhaps append identify
     console.log(body);
     console.log(JSON.parse(body).id);
-    console.log(client.users.get(JSON.parse(body).id));
+    console.log(client.users.get(JSON.parse(body).id).guilds);
   });
   //res.render("server");
 });
