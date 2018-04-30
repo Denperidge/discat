@@ -99,7 +99,7 @@ app.get("/server", (req, res) => {
   var options = {
     url: "https://discordapp.com/api/users/@me/guilds",
     headers: {
-      "Authorization": req.session.accessToken,
+      "Authorization": req.session.accessToken.replace("Bearer ", ""),
       "Content-Type": "application/x-www-form-urlencoded"
     }
   }
