@@ -72,6 +72,7 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/auth", (req, res) => {
+  console.log("Code: " + req.query.code)
   var options = {
     url: "https://discordapp.com/api/oauth2/token",
     form: {
@@ -89,6 +90,7 @@ app.get("/auth", (req, res) => {
     if (error) throw error;
     var token = JSON.parse(body);
     req.session.accessToken = token.token_type + " " + token.access_token;
+    console.log("Token: " + req.session.accessToken);
     res.redirect("/login");
   });
 });
@@ -105,6 +107,7 @@ app.get("/server", (req, res) => {
     }
   }
   console.log(options.headers);
+
   request.get(options, (error, response, body) => {
     console.log(req.session.accessToken);
     console.log(error);
