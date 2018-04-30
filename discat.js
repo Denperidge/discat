@@ -96,6 +96,7 @@ app.get("/auth", (req, res) => {
 app.get("/server", (req, res) => {
   // TODO see if, with the identify scope, user ID can be fetched. Resulting in the Discord API being able to handle requests
   // client.users.get("user id");
+  console.log(req.get("User-Agent"));
   var options = {
     url: "https://discordapp.com/api/users/@me/guilds",
     headers: {
