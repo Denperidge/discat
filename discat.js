@@ -103,8 +103,9 @@ app.get("/server", (req, res) => {
     }
   }
   request.get(options, (error, response, body) => {
+    console.log(req.session.accessToken);
     console.log(error);
-    console.log(response);
+    //console.log(response);
     console.log(body);
   });
   //res.render("server");
