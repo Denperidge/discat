@@ -73,6 +73,7 @@ app.get("/logout", (req, res) => {
 
 app.get("/auth", (req, res) => {
   console.log("Code: " + req.query.code)
+  console.log(req.query);
   var options = {
     url: "https://discordapp.com/api/oauth2/token",
     form: {
