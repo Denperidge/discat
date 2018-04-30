@@ -88,7 +88,7 @@ app.get("/auth", (req, res) => {
   request.post(options, (error, response, body) => {
     if (error) throw error;
     var token = JSON.parse(body);
-    req.session.accessToken = token.access_token; //token.token_type + " " + token.access_token;
+    req.session.accessToken = token.token_type + " " + token.access_token;
     res.redirect("/login");
   });
 });
