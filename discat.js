@@ -104,6 +104,7 @@ app.get("/server", (req, res) => {
       "User-Agent": "Discat (https://www.discat.website/server, 0.1)"
     }
   }
+  console.log(options.headers);
   request.get(options, (error, response, body) => {
     console.log(req.session.accessToken);
     console.log(error);
