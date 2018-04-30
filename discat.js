@@ -80,7 +80,7 @@ app.get("/auth", (req, res) => {
       "client_secret": client.secret,
       "grant_type": "authorization_code",
       "code": req.query.code,
-      "redirect_uri": "https://discat.website/auth"
+      "redirect_uri": "https://www.discat.website/auth"
     },
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
