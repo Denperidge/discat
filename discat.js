@@ -116,7 +116,7 @@ app.get("/server", (req, res) => {
         icon: server.icon
       });
     }
-    return ownedServers;
+    res.json(ownedServers);
   });
   //res.render("server");
 });
