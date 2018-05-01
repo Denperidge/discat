@@ -72,7 +72,6 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/auth", (req, res) => {
-  console.log(req.query);
   var options = {
     url: "https://discordapp.com/api/oauth2/token",
     form: {
@@ -89,9 +88,7 @@ app.get("/auth", (req, res) => {
   request.post(options, (error, response, body) => {
     if (error) throw error;
     var token = JSON.parse(body);
-    console.log(token);
     req.session.accessToken = token.token_type + " " + token.access_token;
-    console.log("Token: " + req.session.accessToken);
     res.redirect("/login");
   });
 });
@@ -107,13 +104,19 @@ app.get("/server", (req, res) => {
       "User-Agent": "Discat (https://www.discat.website/server, 0.1)"
     }
   }
-  console.log(options.headers);
 
   request.get(options, (error, response, body) => {
-    console.log(req.session.accessToken);
-    console.log(error);
-    //console.log(response);
-    console.log(body);
+    var allServers = JSON.parse(body);
+    var ownedServers = [];
+    for (var i=0; i < allServers.length; i++){
+      var server = allServers[i];
+      if (server.owner == true) ownedServers.push({
+        id: server.id,
+        name: server.name,
+        icon: server.icon
+      });
+    }
+    return ownedServers;
   });
   //res.render("server");
 });
