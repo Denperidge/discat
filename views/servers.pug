@@ -2,6 +2,7 @@ head
     title= "Select server"
     style
       include servers.css
+    style(src="select.css")
 body
     h1= "Select server to configure"
     div#servers
@@ -10,6 +11,5 @@ body
             if servers[i].icon !== null
               img(src="https://cdn.discordapp.com/icons/" + servers[i].id +"/" + servers[i].icon + ".png")
             span #{servers[i].name}
-            
               
             
