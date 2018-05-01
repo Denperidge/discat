@@ -1,9 +1,9 @@
-  head
-    title= "Catbot Controlpanel"
+head
+    title= "Select server"
     style
-      include selectserver.css
-  body
-    h1= "Catbot controlpanel"
+      include servers.css
+body
+    h1= "Select server to configure"
     div#servers
         - for (var i=0; i < servers.length; i++)
           div(class="server" id=servers[i].id)
