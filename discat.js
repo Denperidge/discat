@@ -100,8 +100,7 @@ app.get("/servers", (req, res) => {
     url: "https://discordapp.com/api/users/@me/guilds",
     headers: {
       "Authorization": req.session.accessToken,
-      "Content-Type": "application/x-www-form-urlencoded",
-      "User-Agent": "Discat (https://www.discat.website/server, 0.1)"
+      "Content-Type": "application/x-www-form-urlencoded"
     }
   }
 
