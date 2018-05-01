@@ -1,0 +1,15 @@
+  head
+    title= "Catbot Controlpanel"
+    style
+      include selectserver.css
+  body
+    h1= "Catbot controlpanel"
+    div#servers
+        - for (var i=0; i < servers.length; i++)
+          div(class="server" id=servers[i].id)
+            if servers[i].icon !== null
+              img(src="https://cdn.discordapp.com/icons/{servers[i].id}}/{servers[i].id}}.png {servers[i].icon}")
+            span servers[i].name
+            
+              
+            

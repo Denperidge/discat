@@ -93,7 +93,7 @@ app.get("/auth", (req, res) => {
   });
 });
 
-app.get("/server", (req, res) => {
+app.get("/servers", (req, res) => {
   // TODO see if, with the identify scope, user ID can be fetched. Resulting in the Discord API being able to handle requests
   // client.users.get("user id");
   var options = {
@@ -116,7 +116,10 @@ app.get("/server", (req, res) => {
         icon: server.icon
       });
     }
-    res.json(ownedServers);
+
+    res.render("servers", {
+      servers: ownedServers
+    });
   });
   //res.render("server");
 });
