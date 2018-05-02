@@ -7,7 +7,7 @@ body
     h1= "Select server to configure"
     div#selection
         - for (var i=0; i < servers.length; i++)
-          a(href=servers[i].id)
+          a(href="/server?code=" + servers[i].id)
             div(class="server")
               if servers[i].icon !== null
                 img(src="https://cdn.discordapp.com/icons/" + servers[i].id +"/" + servers[i].icon + ".png")
