@@ -5,7 +5,7 @@ head
     link(href="select.css" rel="stylesheet")
 body
     h1= "Select server to configure"
-    div#servers
+    div#selection
         - for (var i=0; i < servers.length; i++)
           div(class="server" id=servers[i].id)
             if servers[i].icon !== null
