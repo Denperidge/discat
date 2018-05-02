@@ -135,7 +135,7 @@ app.get("/servers", (req, res) => {
 });
 
 
-function checkIfServerAllowed(id, callback) {  // Check if Discat is in server and user owns it, redirects if false, callback if true
+function checkIfServerAllowed(req, res, id, callback) {  // Check if Discat is in server and user owns it, redirects if false, callback if true
   if (client.joinedServers.includes(id))  // Check if Discat is in the server
     if (req.session.ownedServers.includes(id))  // Check if user owns server
       callback(id);
@@ -144,12 +144,12 @@ function checkIfServerAllowed(id, callback) {  // Check if Discat is in server a
 }
 app.get("/server", (req, res) => {
   if (req.query.id != null)  // If user has to be redirected to control panel
-    checkIfServerAllowed(req.query.id, function (id) {
+    checkIfServerAllowed(req, res, req.query.id, function (id) {
       req.session.currentServer = id;  // Save id in session
       res.redirect("/server");  // Return to /server without ?id=
     });
   else // If user has id (supposedly) stored
-    checkIfServerAllowed(req.session.currentServer, function (id) {  // Check if allowed
+    checkIfServerAllowed(req, res, req.session.currentServer, function (id) {  // Check if allowed
       res.render("server");  // Render server settings
     });
 });
