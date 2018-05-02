@@ -16,7 +16,7 @@ var commands = {
   }
 };
 
-function refreshDiscatServers() {
+function loadDiscatServers() {
   client.joinedServers = [];  // Array of the ID's of servers Discat is in
   client.guilds.forEach((guild) => {
     client.joinedServers.push(guild.id);
@@ -35,7 +35,7 @@ client.on('ready', () => {
 
   console.log(`${startupTime} Logged in as ${client.user.tag}!`);
 
-  refreshDiscatServers();  // Load servers Discat is in
+  loadDiscatServers();  // Load servers Discat is in
 
   // Store client id and secret in client object
   client.id = require("./config.json").discat_client_id;
@@ -50,11 +50,11 @@ client.on('message', msg => {
 });
 
 client.on('guildCreate', guild => {
-  refreshDiscatServers();
+  loadDiscatServers();
 });
 
 client.on('guildDelete', guild => {
-  refreshDiscatServers();
+  loadDiscatServers();
 });
 
 // Website
