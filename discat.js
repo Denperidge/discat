@@ -16,7 +16,12 @@ var commands = {
   }
 };
 
-
+function refreshDiscatServers() {
+  client.joinedServers = [];  // Array of the ID's of servers Discat is in
+  client.guilds.forEach((guild) => {
+    client.joinedServers.push(guild.id);
+  });
+}
 
 client.on('ready', () => {
   var date = new Date();
@@ -30,6 +35,8 @@ client.on('ready', () => {
 
   console.log(`${startupTime} Logged in as ${client.user.tag}!`);
 
+  refreshDiscatServers();  // Load servers Discat is in
+
   // Store client id and secret in client object
   client.id = require("./config.json").discat_client_id;
   client.secret = require("./config.json").discat_client_secret;
@@ -41,6 +48,8 @@ client.on('message', msg => {
   if ((reply = commands[guild][msg.content.toLowerCase()]) == null) return;
   reply(msg);
 });
+
+// TODO refreshDiscatServers on guild join or leave
 
 
 // Website
@@ -105,19 +114,44 @@ app.get("/servers", (req, res) => {
   request.get(options, (error, response, body) => {
     var allServers = JSON.parse(body);
     var ownedServers = [];
-    for (var i=0; i < allServers.length; i++){
+    var serversToPush = [];
+    for (var i = 0; i < allServers.length; i++) {
       var server = allServers[i];
-      if (server.owner == true) ownedServers.push({  // TODO check if Discat is in the server
+      if (server.owner == true && client.joinedServers.includes(server.id))
+        ownedServers.push(server.id);  // Owned server with just id, to be stored in session
+      serversToPush.push({  // Owned servers with name/icon, to push to /servers
         id: server.id,
         name: server.name,
         icon: server.icon
       });
     }
 
+    req.session.ownedServers = ownedServers;
+
     res.render("servers", {
-      servers: ownedServers
+      servers: serversToPush
     });
   });
+});
+
+
+function checkIfServerAllowed(id, callback) {  // Check if Discat is in server and user owns it, redirects if false, callback if true
+  if (client.joinedServers.includes(id))  // Check if Discat is in the server
+    if (req.session.ownedServers.includes(id))  // Check if user owns server
+      callback(id);
+    else res.redirect("/servers?error=403");  // If user isn't allowed, return to server selection with 403 Forbidden
+  else res.redirect("/servers?error=404");  // If discat isn't in the server, return to server selection with 404, Discat not found on the server
+}
+app.get("/server", (req, res) => {
+  if (req.query.id != null)  // If user has to be redirected to control panel
+    checkIfServerAllowed(req.query.id, function (id) {
+      req.session.currentServer = id;  // Save id in session
+      res.redirect("/server");  // Return to /server without ?id=
+    });
+  else // If user has id (supposedly) stored
+    checkIfServerAllowed(req.session.currentServer, function (id) {  // Check if allowed
+      res.render("server");  // Render server settings
+    });
 });
 
 app.post("/discatupdate", function (req, res) {
