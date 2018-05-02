@@ -1,3 +1,23 @@
-body{
-    color: red;
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #d9edff;
+    display: flex;
+    align-items: center;
+}
+
+a {
+    width: 24vw;
+    height: 40vw;
+
+    margin: auto;
+    text-align: center;
+
+    color: black;
+
+    background-color: #d0e9ff;
+    border: 1px #c7c7c7 groove;
+    border-radius: 10%;
+
+    text-decoration: none;
 }
