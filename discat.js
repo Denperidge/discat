@@ -49,8 +49,13 @@ client.on('message', msg => {
   reply(msg);
 });
 
-// TODO refreshDiscatServers on guild join or leave
+client.on('guildCreate', guild => {
+  refreshDiscatServers();
+});
 
+client.on('guildDelete', guild => {
+  refreshDiscatServers();
+});
 
 // Website
 app.set("view engine", "pug");
