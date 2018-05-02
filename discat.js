@@ -94,8 +94,6 @@ app.get("/auth", (req, res) => {
 });
 
 app.get("/servers", (req, res) => {
-  // TODO see if, with the identify scope, user ID can be fetched. Resulting in the Discord API being able to handle requests
-  // client.users.get("user id");
   var options = {
     url: "https://discordapp.com/api/users/@me/guilds",
     headers: {
@@ -109,7 +107,7 @@ app.get("/servers", (req, res) => {
     var ownedServers = [];
     for (var i=0; i < allServers.length; i++){
       var server = allServers[i];
-      if (server.owner == true) ownedServers.push({
+      if (server.owner == true) ownedServers.push({  // TODO check if Discat is in the server
         id: server.id,
         name: server.name,
         icon: server.icon
@@ -120,7 +118,6 @@ app.get("/servers", (req, res) => {
       servers: ownedServers
     });
   });
-  //res.render("server");
 });
 
 app.post("/discatupdate", function (req, res) {
