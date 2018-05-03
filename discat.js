@@ -195,6 +195,10 @@ app.get("/server", (req, res) => {
     });
 });
 
+app.get("/modules", (req, res) => {
+  res.render("modules");
+});
+
 app.post("/discatupdate", function (req, res) {
   try {
     const crypto = require("crypto");
