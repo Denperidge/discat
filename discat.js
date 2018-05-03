@@ -8,6 +8,9 @@ const request = require("request");
 // Bot
 const client = new Discord.Client();
 
+var commands = {};
+var modules = {};
+/*
 var commands = {
   "429687446566076427": {
     "ping": function (msg) {
@@ -15,6 +18,7 @@ var commands = {
     }
   }
 };
+*/
 
 function loadDiscatServers() {
   client.joinedServers = [];  // Array of the ID's of servers Discat is in
@@ -22,6 +26,41 @@ function loadDiscatServers() {
     client.joinedServers.push(guild.id);
   });
 }
+
+function loadModules() {
+  const fs = require("fs");
+
+  fs.readdir("discat-modules/modules/", (err, files) => {
+    if (err) throw err;
+
+    var newModules = {};  // Don't change modules one by one, but all at once by using modules = newModules
+    var newCommands;  // Don't change commands one by one, but all at once by using commands = newCommands
+
+    for (var i = 0; i < files.length; i++) {
+      var discatModule = files[i];
+
+      var description = fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/description.txt", "utf8");
+
+      newModules[discatModule] = {};
+      newModules[discatModule].description = description;
+
+      /* TODO serversettings
+      fs.readFile(__dirname + "/discat-modules/modules/" + module + "/serversettings.pug", (err, data) => {
+        newModules[module.command].serversettings = data;
+      });
+      */
+
+      // TODO usersettings
+    }
+    modules = newModules;
+    commands = newCommands;
+  });
+}
+
+app.get("/test", (req, res) => {
+  loadModules();
+})
+
 
 client.on('ready', () => {
   var date = new Date();
@@ -35,6 +74,7 @@ client.on('ready', () => {
 
   console.log(`${startupTime} Logged in as ${client.user.tag}!`);
 
+  loadModules();  // Load all the modules for the website
   loadDiscatServers();  // Load servers Discat is in
 
   // Store client id and secret in client object
@@ -122,13 +162,14 @@ app.get("/servers", (req, res) => {
     var serversToPush = [];
     for (var i = 0; i < allServers.length; i++) {
       var server = allServers[i];
-      if (server.owner == true && client.joinedServers.includes(server.id))
+      if (server.owner == true && client.joinedServers.includes(server.id)) {
         ownedServers.push(server.id);  // Owned server with just id, to be stored in session
-      serversToPush.push({  // Owned servers with name/icon, to push to /servers
-        id: server.id,
-        name: server.name,
-        icon: server.icon
-      });
+        serversToPush.push({  // Owned servers with name/icon, to push to /servers
+          id: server.id,
+          name: server.name,
+          icon: server.icon
+        });
+      }
     }
 
     req.session.ownedServers = ownedServers;
