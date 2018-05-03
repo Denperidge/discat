@@ -1,7 +1,14 @@
 head
     title= "Server config"
-     link(href="select.css" rel="stylesheet")
+    link(href="select.css" rel="stylesheet")
+    include server.css
 body
     h1= "Server config"
-
+    div#menu
+    div#selection
+        a(onclick="addModule();")
+            div 
+                span Add module
+    script(src="functions.js")
+    script(src="server.js")
 
