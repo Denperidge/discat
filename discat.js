@@ -197,8 +197,13 @@ app.get("/servers", (req, res) => {
 
 app.get("/server", (req, res) => {
   if (client.joinedServers.includes(req.query.id))  // Check if Discat is in the server
-    if (req.session.ownedServers.includes(req.query.id))  // Check if user owns server
-      res.render("server");  // TODO pass servers' installed modules
+    if (req.session.ownedServers.includes(req.query.id)){  // Check if user owns server
+      var serverId = req.query.id;
+      req.url = req.url.split("?")[0];
+      res.render("server", {
+        serverId: serverId
+      });  // TODO pass servers' installed modules
+    }
     else res.redirect("/servers?error=403");  // If user isn't allowed, return to server selection with 403 Forbidden
   else res.redirect("/servers?error=404");  // If discat isn't in the server, return to server selection with 404, Discat not found on the server
 });
