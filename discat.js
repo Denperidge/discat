@@ -3,7 +3,9 @@ const Discord = require('discord.js');
 const express = require('express');
 const app = express();
 const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
 const request = require("request");
+const mongoose = require("mongoose");
 
 // Bot
 const client = new Discord.Client();
@@ -91,11 +93,16 @@ client.on('guildDelete', guild => {
   loadDiscatServers();
 });
 
+// Mongoose
+mongoose.connect("mongodb://localhost/test")
+
+
 // Website
 app.set("view engine", "pug");
 app.use(require("body-parser").json());
 app.set("trust proxy", 1);  // Trust NGINX
 app.use(session({
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
   secret: "kokop54sdf56fgfgs849fzer",
   resave: false,
   saveUninitialized: false,
