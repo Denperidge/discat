@@ -76,7 +76,7 @@ client.on('ready', () => {
   // Store client id and secret in client object
   client.id = require("./config.json").discat_client_id;
   client.secret = require("./config.json").discat_client_secret;
-}); // TODO session
+});
 
 client.on('message', msg => {
   var guild; var reply;
@@ -86,11 +86,11 @@ client.on('message', msg => {
 });
 
 client.on('guildCreate', guild => {
-  loadDiscatServers();
+  loadDiscatServers();  // When Discat joins a guild, refresh the variable that stores what server Discat's in
 });
 
 client.on('guildDelete', guild => {
-  loadDiscatServers();
+  loadDiscatServers();  // When Discat leaves a guild, refresh the variable that stores what server Discat's in
 });
 
 // Mongoose
