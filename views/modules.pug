@@ -6,6 +6,8 @@ div
                 span #{modules[keys[i]].description}
 script.
     // Set server ID in every addmodule link
+    console.log("test");
+    console.log(window.location.href);
     var modulelinks = document.getElementsByClassName("module");
     for(var i = 0; i < modulelinks.length; i++)
         modulelinks[i].href = modulelinks[i].href.replace("{0}", window.location.href.split("=")[1]);
