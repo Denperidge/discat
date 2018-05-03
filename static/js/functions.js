@@ -11,7 +11,7 @@ function Focus(parent, opacity, clickthrough, instantFireCallback, callback) {
 
     overlay.style.zIndex = 9;
     parent.style.zIndex = 10;
-    parent.style.position = "absolute";
+    parent.style.position = "relative";
 
     overlay.style.opacity = 0;
     var fadeIn = setInterval(function () {
