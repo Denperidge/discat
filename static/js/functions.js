@@ -1,4 +1,4 @@
-function Focus(parent, opacity, instantFireCallback, callback) {
+function Focus(parent, opacity, clickthrough, instantFireCallback, callback) {
     // instantFireCallback: should callback be fired after overlay has dissapeared or instantly?
     var overlay = document.createElement("div");
     overlay.style.position = "fixed";
@@ -22,10 +22,12 @@ function Focus(parent, opacity, instantFireCallback, callback) {
 
 
     overlay.onclick = function (e) {
-        // When user clicks overlay (thus closing parent), fire click event as if overlay was never there
-        overlay.style.pointerEvents = "none";
-        document.elementFromPoint(e.clientX, e.clientY).click();
-
+        if (clickthrough){
+            // When user clicks overlay (thus closing parent), fire click event as if overlay was never there if desired
+            overlay.style.pointerEvents = "none";
+            document.elementFromPoint(e.clientX, e.clientY).click();
+        }
+        
         clearInterval(fadeIn);  // If fadein couldn't finish, make sure it doesn't try to
         if (instantFireCallback) callback();
 
