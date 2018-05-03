@@ -57,11 +57,6 @@ function loadModules() {
   });
 }
 
-app.get("/test", (req, res) => {
-  loadModules();
-})
-
-
 client.on('ready', () => {
   var date = new Date();
   var day = date.getDate();
