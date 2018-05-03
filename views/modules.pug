@@ -1,6 +1,6 @@
 div
     - for (var i=0; i < keys.length; i++)
-      a(href="addModule")
+      a(href="/addmodule?id=" + serverId + "&module=" + keys[i])
             div
                 h1 #{keys[i]}
                 span #{modules[keys[i]].description}
