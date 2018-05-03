@@ -3,6 +3,8 @@
     height: 0%;
     transition: height 2s;
 
+    visibility: hidden;
+
     background-color: #adbdcc;
 
     border: 1px solid #97a5b2;
