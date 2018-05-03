@@ -196,7 +196,9 @@ app.get("/server", (req, res) => {
 });
 
 app.get("/modules", (req, res) => {
-  res.render("modules");
+  res.render("modules", {
+    modules: modules
+  });
 });
 
 app.post("/discatupdate", function (req, res) {
