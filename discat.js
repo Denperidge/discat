@@ -94,7 +94,21 @@ client.on('guildDelete', guild => {
 });
 
 // Mongoose
-mongoose.connect("mongodb://localhost/test")
+mongoose.connect("mongodb://localhost/discat")
+var db = mongoose.connection;
+db.on("error", console.error.bind(console, "Error connecting to MongoDB!"));
+db.once("open", function(){
+  var date = new Date();
+  var day = date.getDate();
+  if (day.toString().length == 1) day = "0" + day;
+  var month = date.getMonth() + 1;
+  if (month.toString().length == 1) month = "0" + month;
+  var year = date.getFullYear();
+  var time = date.toLocaleTimeString();
+  var startupTime = `[${day}-${month}-${year} ${time}]`;
+
+  console.log(startupTime + " MongoDB connected!");
+});
 
 
 // Website
