@@ -175,24 +175,15 @@ app.get("/servers", (req, res) => {
   });
 });
 
-
-function checkIfServerAllowed(req, res, id, callback) {  // Check if Discat is in server and user owns it, redirects if false, callback if true
+app.get("/server/*/", (req, res) => {
+  console.log(req.url);
+  console.log(req.url.split("/")[2]);
+  var id = req.url.split("/")[2];
   if (client.joinedServers.includes(id))  // Check if Discat is in the server
     if (req.session.ownedServers.includes(id))  // Check if user owns server
-      callback(id);
+      res.render("server");
     else res.redirect("/servers?error=403");  // If user isn't allowed, return to server selection with 403 Forbidden
   else res.redirect("/servers?error=404");  // If discat isn't in the server, return to server selection with 404, Discat not found on the server
-}
-app.get("/server", (req, res) => {
-  if (req.query.id != null)  // If user has to be redirected to control panel
-    checkIfServerAllowed(req, res, req.query.id, function (id) {
-      req.session.currentServer = id;  // Save id in session
-      res.redirect("/server");  // Return to /server without ?id=
-    });
-  else // If user has id (supposedly) stored
-    checkIfServerAllowed(req, res, req.session.currentServer, function (id) {  // Check if allowed
-      res.render("server");  // Render server settings
-    });
 });
 
 app.get("/modules", (req, res) => {
