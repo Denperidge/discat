@@ -185,8 +185,7 @@ app.get("/server", (req, res) => {
 app.get("/modules", (req, res) => {
   res.render("modules", {
     keys: Object.keys(modules),
-    modules: modules,
-    serverId: req.query.id
+    modules: modules
   });
 });
 
