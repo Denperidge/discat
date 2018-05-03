@@ -199,7 +199,10 @@ app.get("/server", (req, res) => {
   if (client.joinedServers.includes(req.query.id))  // Check if Discat is in the server
     if (req.session.ownedServers.includes(req.query.id)){  // Check if user owns server
       var serverId = req.query.id;
+      console.log(req.url.split("?")[0]);
+      console.log(req.url);
       req.url = req.url.split("?")[0];
+      console.log(req.url);
       res.render("server", {
         serverId: serverId
       });  // TODO pass servers' installed modules
