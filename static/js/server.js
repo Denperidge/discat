@@ -1,5 +1,5 @@
 var request = new XMLHttpRequest();
-request.onreadystatechange = function (){
+request.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200)
         document.getElementById("menu").innerHTML = request.responseText;
 }
@@ -18,5 +18,5 @@ function openMenu() {
 function addModule() {
     openMenu();
     request.open("GET", "/modules", true);
-    reqeust.send();
+    request.send();
 }
