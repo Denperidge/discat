@@ -201,12 +201,13 @@ app.get("/server", (req, res) => {
       var serverId = req.query.id;
       console.log(req.url.split("?")[0]);
       console.log(req.url);
-      res.location(req.url.split("?")[0])
+      //res.location(req.url.split("?")[0])
       req.url = req.url.split("?")[0];
       console.log(req.url);
       res.render("server", {
         serverId: serverId
       });  // TODO pass servers' installed modules
+      res.redirect("/server");
     }
     else res.redirect("/servers?error=403");  // If user isn't allowed, return to server selection with 403 Forbidden
   else res.redirect("/servers?error=404");  // If discat isn't in the server, return to server selection with 404, Discat not found on the server
