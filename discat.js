@@ -201,6 +201,7 @@ app.get("/server", (req, res) => {
       var serverId = req.query.id;
       console.log(req.url.split("?")[0]);
       console.log(req.url);
+      res.location(req.url.split("?")[0])
       req.url = req.url.split("?")[0];
       console.log(req.url);
       res.render("server", {
