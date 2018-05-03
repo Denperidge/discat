@@ -53,7 +53,6 @@ function loadModules() {
       // TODO usersettings
     }
     modules = newModules;
-    commands = newCommands;
   });
 }
 
