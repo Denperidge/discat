@@ -97,7 +97,7 @@ client.on('guildDelete', guild => {
 mongoose.connect("mongodb://localhost/discat")
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "Error connecting to MongoDB!"));
-db.once("open", function(){
+db.once("open", function () {
   var date = new Date();
   var day = date.getDate();
   if (day.toString().length == 1) day = "0" + day;
@@ -195,15 +195,20 @@ app.get("/servers", (req, res) => {
   });
 });
 
+function checkIfUserOwnsDiscatServer(id, successCallback, unauthorizedCallback, notFoundCallback) {
+  if (client.joinedServers.includes(id))  // Check if Discat is in the server
+    if (req.session.ownedServers.includes(id))  // Check if user owns server
+      callback(id)
+    else unauthorizedCallback();  // If user isn't allowed, return to server selection with 403 Forbidden
+  else notFoundCallback();  // If discat isn't in the server, return to server selection with 404, Discat not found on the server
+}
+
 app.get("/server", (req, res) => {
-  if (client.joinedServers.includes(req.query.id))  // Check if Discat is in the server
-    if (req.session.ownedServers.includes(req.query.id)){  // Check if user owns server
-      res.render("server", {
-        serverId: req.query.id
-      });  // TODO pass servers' installed modules
-    }
-    else res.redirect("/servers?error=403");  // If user isn't allowed, return to server selection with 403 Forbidden
-  else res.redirect("/servers?error=404");  // If discat isn't in the server, return to server selection with 404, Discat not found on the server
+  checkIfUserOwnsDiscatServer(req.query.id, function () {
+    res.render("server", {
+      serverId: req.query.id
+    });  // TODO pass servers' installed modules
+  }, res.redirect("/servers?error=403"), res.redirect("/servers?error=404"));
 });
 
 app.get("/modules", (req, res) => {
@@ -213,8 +218,12 @@ app.get("/modules", (req, res) => {
   });
 });
 
-app.get("/addmodule", (req, res) => {
-  console.log(req.query.id + " " + req.query.module);
+app.post("/addmodule", (req, res) => {
+  // Check if user is authorized to access server settings
+  checkIfUserOwnsDiscatServer(req.body.Discord_Server_Id, function () {
+    console.log(req.body.Discat_Module_Name);  // TODO add to server
+    res.sendStatus(200);
+  }, res.sendStatus(403), res.status(404).send("Discat not in Discord server"));
 
   // TODO loadcommands
 });
