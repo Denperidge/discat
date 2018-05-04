@@ -1,14 +1,7 @@
-var request = new XMLHttpRequest();
-request.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("menu").innerHTML = request.responseText;
-
-        // Set server ID in all the modules (may change later in other menus)
-        var modulelinks = document.getElementsByClassName("module");
-        for (var i = 0; i < modulelinks.length; i++)
-            modulelinks[i].href = modulelinks[i].href.replace("{0}", document.body.id);
-            
-    }
+var menuRequest = new XMLHttpRequest();
+menuRequest.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200)
+        document.getElementById("menu").innerHTML = menuRequest.responseText;
 }
 
 function openMenu() {
@@ -24,6 +17,22 @@ function openMenu() {
 
 function showAvailableModules() {
     openMenu();
-    request.open("GET", "/modules", true);
-    request.send();
+    menuRequest.open("GET", "/modules", true);
+    menuRequest.send();
+}
+
+function addModule(moduleName){
+    var addModuleRequest = new XMLHttpRequest();
+    addModuleRequest.setRequestHeader("Content-Type", "application/json");
+    addModuleRequest.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200)
+            alert("Module added!");
+    }
+    menuRequest.open("POST", "/addmodule", true);
+    menuRequest.send({
+        "Discord_Server_Id": document.body.id,
+        "Discat_Module_Name": moduleName
+    });
+
+
 }
