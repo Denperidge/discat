@@ -22,7 +22,7 @@ function openMenu() {
     menu.style.height = "80%";
 }
 
-function addModule() {
+function showAvailableModules() {
     openMenu();
     request.open("GET", "/modules", true);
     request.send();
