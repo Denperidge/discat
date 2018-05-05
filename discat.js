@@ -195,7 +195,7 @@ app.get("/servers", (req, res) => {
   });
 });
 
-function checkIfUserOwnsDiscatServer(id, successCallback, unauthorizedCallback, notFoundCallback) {
+function checkIfUserOwnsDiscatServer(id, req, successCallback, unauthorizedCallback, notFoundCallback) {
   if (client.joinedServers.includes(id))  // Check if Discat is in the server
     if (req.session.ownedServers.includes(id))  // Check if user owns server
       callback(id)
@@ -204,7 +204,7 @@ function checkIfUserOwnsDiscatServer(id, successCallback, unauthorizedCallback, 
 }
 
 app.get("/server", (req, res) => {
-  checkIfUserOwnsDiscatServer(req.query.id, function () {
+  checkIfUserOwnsDiscatServer(req.query.id, req, function () {
     res.render("server", {
       serverId: req.query.id
     });  // TODO pass servers' installed modules
@@ -220,7 +220,7 @@ app.get("/modules", (req, res) => {
 
 app.post("/addmodule", (req, res) => {
   // Check if user is authorized to access server settings
-  checkIfUserOwnsDiscatServer(req.body.Discord_Server_Id, function () {
+  checkIfUserOwnsDiscatServer(req.body.Discord_Server_Id, req, function () {
     console.log(req.body.Discat_Module_Name);  // TODO add to server
     res.sendStatus(200);
   }, ()=>{res.sendStatus(403)}, ()=>{res.status(404).send("Discat not in Discord server")});
