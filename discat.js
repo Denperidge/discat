@@ -208,7 +208,7 @@ app.get("/server", (req, res) => {
     res.render("server", {
       serverId: req.query.id
     });  // TODO pass servers' installed modules
-  }, res.redirect("/servers?error=403"), res.redirect("/servers?error=404"));
+  }, ()=>{res.redirect("/servers?error=403")}, ()=>{res.redirect("/servers?error=404")});
 });
 
 app.get("/modules", (req, res) => {
@@ -223,7 +223,7 @@ app.post("/addmodule", (req, res) => {
   checkIfUserOwnsDiscatServer(req.body.Discord_Server_Id, function () {
     console.log(req.body.Discat_Module_Name);  // TODO add to server
     res.sendStatus(200);
-  }, res.sendStatus(403), res.status(404).send("Discat not in Discord server"));
+  }, ()=>{res.sendStatus(403)}, ()=>{res.status(404).send("Discat not in Discord server")});
 
   // TODO loadcommands
 });
