@@ -198,7 +198,7 @@ app.get("/servers", (req, res) => {
 function checkIfUserOwnsDiscatServer(id, req, successCallback, unauthorizedCallback, notFoundCallback) {
   if (client.joinedServers.includes(id))  // Check if Discat is in the server
     if (req.session.ownedServers.includes(id))  // Check if user owns server
-      callback(id)
+      successCallback(id);
     else unauthorizedCallback();  // If user isn't allowed, return to server selection with 403 Forbidden
   else notFoundCallback();  // If discat isn't in the server, return to server selection with 404, Discat not found on the server
 }
