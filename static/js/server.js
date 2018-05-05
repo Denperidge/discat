@@ -29,10 +29,10 @@ function addModule(moduleName){
     }
     addModuleRequest.open("POST", "/addmodule", true);
     addModuleRequest.setRequestHeader("Content-Type", "application/json");
-    addModuleRequest.send({
+    addModuleRequest.send(JSON.stringify({
         "Discord_Server_Id": document.body.id,
         "Discat_Module_Name": moduleName
-    });
+    }));
 
 
 }
