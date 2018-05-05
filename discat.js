@@ -219,6 +219,7 @@ app.get("/modules", (req, res) => {
 });
 
 app.post("/addmodule", (req, res) => {
+  console.log(req.body);
   // Check if user is authorized to access server settings
   checkIfUserOwnsDiscatServer(req.body.Discord_Server_Id, req, function () {
     console.log(req.body.Discat_Module_Name);  // TODO add to server
