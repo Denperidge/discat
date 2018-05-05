@@ -23,13 +23,13 @@ function showAvailableModules() {
 
 function addModule(moduleName){
     var addModuleRequest = new XMLHttpRequest();
-    addModuleRequest.setRequestHeader("Content-Type", "application/json");
     addModuleRequest.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200)
             alert("Module added!");
     }
-    menuRequest.open("POST", "/addmodule", true);
-    menuRequest.send({
+    addModuleRequest.open("POST", "/addmodule", true);
+    addModuleRequest.setRequestHeader("Content-Type", "application/json");
+    addModuleRequest.send({
         "Discord_Server_Id": document.body.id,
         "Discat_Module_Name": moduleName
     });
