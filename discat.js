@@ -251,7 +251,6 @@ app.get("/server", (req, res) => {
 
 app.get("/allmodules", (req, res) => {
   res.render("modules", {
-    keys: Object.keys(modules),
     modules: modules
   });
 });
