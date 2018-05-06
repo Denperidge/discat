@@ -262,8 +262,10 @@ app.post("/addmodule", (req, res) => {
   checkIfUserOwnsDiscatServer(serverId, req, function () {
     modifyDbServer(serverId, (server) => {
       var moduleName = req.body.Discat_Module_Name;
-      if (server.modules.filter(module => (module.name == moduleName).length >= 1))
+      if (server.modules.filter(module => (module.name == moduleName).length >= 1)){
         res.status(409).send("Module already added to server!");
+        return;
+      }
       server.modules.push(modules[req.body.Discat_Module_Name]);
       server.save((err, server) => { if (err) throw err; });
       res.sendStatus(200);
