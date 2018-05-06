@@ -46,6 +46,18 @@ function addModule(moduleName) {
         "Discord_Server_Id": document.body.id,
         "Discat_Module_Name": moduleName
     }));
+}
 
-
+function removeModule(moduleName){
+    var removeModuleRequest = new XMLHttpRequest();
+    removeModuleRequest.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200)
+            alert("Module removed!");
+    }
+    removeModuleRequest.open("DELETE", "/removemodule", true);
+    removeModuleRequest.setRequestHeader("Content-Type", "application/json");
+    removeModuleRequest.send(JSON.stringify({
+        "Discord_Server_Id": document.body.id,
+        "Discat_Module_Name": moduleName
+    }));
 }

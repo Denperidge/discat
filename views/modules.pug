@@ -3,3 +3,6 @@
         div
             h1 #{modules[i].name}
             span #{modules[i].description}
+            if showModuleSettings
+                button Settings
+                button(onclick="removeModule(\"" + modules[i].name + "\");") Remove

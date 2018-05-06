@@ -282,13 +282,14 @@ app.get("/servermodules", (req, res) => {
       if (err) throw err;
 
       res.render("modules", {
-        modules: servers[0].modules
+        modules: servers[0].modules,
+        showModuleSettings: true
       });
     });
   }, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
 });
 
-app.post("/removemodule", (req, res) => {
+app.delete("/removemodule", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   // Check if user is authorized to access server settings
   checkIfUserOwnsDiscatServer(serverId, req, function () {
