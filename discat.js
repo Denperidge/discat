@@ -277,6 +277,8 @@ app.post("/addmodule", (req, res) => {
 
 app.get("/servermodules", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
+  console.log(serverId);
+  console.log(client.joinedServers);
   // Check if user is authorized to access server settings
   checkIfUserOwnsDiscatServer(serverId, req, function () {
     dbServer.find({ id: serverId }, (err, servers) => {
