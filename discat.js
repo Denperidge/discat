@@ -281,6 +281,11 @@ app.get("/servermodules", (req, res) => {
     dbServer.find({ id: serverId }, (err, servers) => {
       if (err) throw err;
 
+      if (servers[0].modules.length == 0){
+        res.status(404).send("No modules installed!");
+        return;
+      }
+
       res.render("modules", {
         modules: servers[0].modules,
         showModuleSettings: true
