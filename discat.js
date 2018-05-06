@@ -249,8 +249,8 @@ app.get("/server", (req, res) => {
   }, () => { res.redirect("/servers?error=403") }, () => { res.redirect("/servers?error=404") });
 });
 
-app.get("/modules", (req, res) => {
-  res.render("modules", {
+app.get("/allmodules", (req, res) => {
+  res.render("allmodules", {
     keys: Object.keys(modules),
     modules: modules
   });

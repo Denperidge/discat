@@ -17,7 +17,7 @@ function openMenu() {
 
 function showAvailableModules() {
     openMenu();
-    menuRequest.open("GET", "/modules", true);
+    menuRequest.open("GET", "/allmodules", true);
     menuRequest.send();
 }
 
