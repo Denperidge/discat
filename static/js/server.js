@@ -6,11 +6,8 @@ function loadServerModules() {
             selection.innerHTML = serverModulesRequest.responseText + selection.innerHTML;
         }
     }
-    serverModulesRequest.open("GET", "/servermodules", true);
-    serverModulesRequest.setRequestHeader("Content-Type", "application/json");
-    serverModulesRequest.send(JSON.stringify({
-        "Discord_Server_Id": document.body.id
-    }));
+    serverModulesRequest.open("GET", "/servermodules?DiscordServerId=" + document.body.id, true);
+    serverModulesRequest.send();
 }
 loadServerModules();
 
