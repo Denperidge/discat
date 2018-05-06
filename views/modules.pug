@@ -1,5 +1,5 @@
-- for (var i=0; i < keys.length; i++)
-    a(onclick="addModule(\"" + keys[i] + "\");" class="module")
+- for (var i=0; i < modules.length; i++)
+    a(onclick="addModule(\"" + modules[i].name + "\");" class="module")
         div
-            h1 #{keys[i]}
-            span #{modules[keys[i]].description}
+            h1 #{modules[i].name}
+            span #{modules[i].description}
