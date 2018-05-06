@@ -261,6 +261,8 @@ app.post("/addmodule", (req, res) => {
   // Check if user is authorized to access server settings
   checkIfUserOwnsDiscatServer(serverId, req, function () {
     modifyDbServer(serverId, (server) => {
+      console.log(server.modules);
+      console.log(modules[req.body.Discat_Module_Name]);
       server.modules.push(modules[req.body.Discat_Module_Name]);
       
     });
