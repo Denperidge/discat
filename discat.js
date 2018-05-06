@@ -275,6 +275,29 @@ app.post("/addmodule", (req, res) => {
   // TODO loadcommands
 });
 
+app.post("/removemodule", (req, res) => {
+  var serverId = req.body.Discord_Server_Id;
+  // Check if user is authorized to access server settings
+  checkIfUserOwnsDiscatServer(serverId, req, function () {
+    modifyDbServer(serveRId, (server) => {
+      var moduleName = req.body.Discat_Module_Name;
+      
+      // Should only be one, but can't grab [0] if length == 0
+      var modulesWithCorrectName = server.modules.filter(module => (module.name == moduleName));
+      if (modulesWithCorrectName.length < 1){
+        res.status(409).send("Can't remove module that isn't added to the server!");
+        return;
+      }
+      
+      server.modules.splice(server.modules.indexOf(modulesWithCorrectName[0]), 1);
+      server.save((err, server) => { if (err) throw err; });
+    });
+    // TODO loadcommands
+  });
+});
+
+
+// App
 app.post("/discatupdate", function (req, res) {
   try {
     const crypto = require("crypto");
