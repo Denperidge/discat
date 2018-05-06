@@ -1,9 +1,10 @@
-function loadServerModules(){
+function loadServerModules() {
     var serverModulesRequest = new XMLHttpRequest();
     serverModulesRequest.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200)
-        var selection = document.getElementById("selection");
-        selection.innerHTML = serverModulesRequest.responseText + selection.innerHTML;
+        if (this.readyState == 4 && this.status == 200){
+            var selection = document.getElementById("selection");
+            selection.innerHTML = serverModulesRequest.responseText + selection.innerHTML;
+        }
     }
     serverModulesRequest.open("GET", "/servermodules", true);
     serverModulesRequest.setRequestHeader("Content-Type", "application/json");
@@ -36,7 +37,7 @@ function showAvailableModules() {
     menuRequest.send();
 }
 
-function addModule(moduleName){
+function addModule(moduleName) {
     var addModuleRequest = new XMLHttpRequest();
     addModuleRequest.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200)
