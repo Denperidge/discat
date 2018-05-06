@@ -260,8 +260,10 @@ app.post("/addmodule", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   // Check if user is authorized to access server settings
   checkIfUserOwnsDiscatServer(serverId, req, function () {
-    console.log(req.body.Discat_Module_Name);  // TODO add to server
-    res.sendStatus(200);
+    modifyDbServer(serverId, (server) => {
+      server.modules.push(modules[req.body.Discat_Module_Name]);
+      res.sendStatus(200);
+    });
   }, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
 
   // TODO loadcommands
