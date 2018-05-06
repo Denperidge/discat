@@ -59,6 +59,7 @@ function loadModules() {
       var description = fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/description.txt", "utf8");
 
       newModules[discatModule] = {};
+      newModules[discatModule].name = discatModule;
       newModules[discatModule].description = description;
 
       /* TODO serversettings
