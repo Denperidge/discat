@@ -11,6 +11,7 @@ function loadServerModules(){
         "Discord_Server_Id": document.body.id
     }));
 }
+loadServerModules();
 
 var menuRequest = new XMLHttpRequest();
 menuRequest.onreadystatechange = function () {
