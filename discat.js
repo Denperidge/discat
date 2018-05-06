@@ -22,10 +22,25 @@ var commands = {
 };
 */
 
+// Runs at startup and on server join/leave
 function loadDiscatServers() {
   client.joinedServers = [];  // Array of the ID's of servers Discat is in
   client.guilds.forEach((guild) => {
-    client.joinedServers.push(guild.id);
+    var serverId = guild.id;
+    client.joinedServers.push(serverId);
+
+    // Check if server has been added to database, add if not
+    modifyDbServer(serverId, (server) => {
+      if (server == undefined) {
+        server = new dbServer({
+          id: serverId,
+          prefix: "!",
+        });
+        server.save((err, server) => {
+          if (err) throw err;
+        });
+      }
+    });
   });
 }
 
@@ -70,9 +85,6 @@ client.on('ready', () => {
 
   console.log(`${startupTime} Logged in as ${client.user.tag}!`);
 
-  loadModules();  // Load all the modules for the website
-  loadDiscatServers();  // Load servers Discat is in
-
   // Store client id and secret in client object
   client.id = require("./config.json").discat_client_id;
   client.secret = require("./config.json").discat_client_secret;
@@ -91,13 +103,31 @@ client.on('guildCreate', guild => {
 
 client.on('guildDelete', guild => {
   loadDiscatServers();  // When Discat leaves a guild, refresh the variable that stores what server Discat's in
+  dbServer.remove({ id: guild.id }, (err) => {
+    // Remove server from database on server leave
+    if (err) throw err;
+  })
 });
 
 // Mongoose
 mongoose.connect("mongodb://localhost/discat")
 var db = mongoose.connection;
+var dbServer;
 db.on("error", console.error.bind(console, "Error connecting to MongoDB!"));
 db.once("open", function () {
+  var serverSchema = mongoose.Schema({
+    id: String,
+    prefix: String,
+    modules: []
+  });
+  dbServer = mongoose.model("servers", serverSchema);
+
+  // Wait 1500ms to make sure Discord client could connect
+  setTimeout(() => {
+    loadModules();  // Load all the modules
+    loadDiscatServers();  // Load servers Discat is in
+  }, 1500);
+
   var date = new Date();
   var day = date.getDate();
   if (day.toString().length == 1) day = "0" + day;
@@ -110,6 +140,14 @@ db.once("open", function () {
   console.log(startupTime + " MongoDB connected!");
 });
 
+
+// Wrapper to get rid of boilerplate code
+function modifyDbServer(serverId, modification) {
+  dbServer.find({ id: serverId }, (err, servers) => {
+    if (err) throw err;
+    modification(servers[0]);
+  });
+}
 
 // Website
 app.set("view engine", "pug");
@@ -219,10 +257,9 @@ app.get("/modules", (req, res) => {
 });
 
 app.post("/addmodule", (req, res) => {
-  console.log(
-    req.body);
+  var serverId = req.body.Discord_Server_Id;
   // Check if user is authorized to access server settings
-  checkIfUserOwnsDiscatServer(req.body.Discord_Server_Id, req, function () {
+  checkIfUserOwnsDiscatServer(serverId, req, function () {
     console.log(req.body.Discat_Module_Name);  // TODO add to server
     res.sendStatus(200);
   }, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
@@ -231,7 +268,7 @@ app.post("/addmodule", (req, res) => {
 });
 
 app.post("/discatupdate", function (req, res) {
-  try { 
+  try {
     const crypto = require("crypto");
     if (crypto.timingSafeEqual(
       new Buffer(req.headers["x-hub-signature"]),
