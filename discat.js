@@ -37,6 +37,7 @@ function loadDiscatServers() {
           prefix: "!",
         });
       }
+      return server;
     });
   });
 }
@@ -140,14 +141,15 @@ db.once("open", function () {
 
 
 // Wrapper to get rid of boilerplate code
+// let modification return server object if it needs to be saved
 function modifyDbServer(serverId, modification) {
   dbServer.find({ id: serverId }, (err, servers) => {
     if (err) throw err;
-    modification(servers[0]);
-    if (servers[0] == undefined) return;
-    servers[0].save((err, server) => {
-      if (err) throw err;
-    });
+    var serverToSave = modification(servers[0]);
+    if (serverToSave != undefined)
+      serverToSave.save((err, server) => {
+        if (err) throw err;
+      });
   });
 }
 
@@ -268,6 +270,7 @@ app.post("/addmodule", (req, res) => {
         res.status(409).send("Module already added to server!");
       server.modules.push(modules[req.body.Discat_Module_Name]);
       res.sendStatus(200);
+      return server;
     });
   }, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
 
