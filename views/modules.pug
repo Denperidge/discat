@@ -1,8 +1,10 @@
 - for (var i=0; i < modules.length; i++)
-    a(onclick="addModule(\"" + modules[i].name + "\");" class="module")
+    a(class="module")
         div
             h1 #{modules[i].name}
             span #{modules[i].description}
             if showModuleSettings
                 button Settings
                 button(onclick="removeModule(\"" + modules[i].name + "\");") Remove
+            else
+                button(onclick="addModule(\"" + modules[i].name + "\");") Add module to server
