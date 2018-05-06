@@ -262,8 +262,9 @@ app.post("/addmodule", (req, res) => {
   checkIfUserOwnsDiscatServer(serverId, req, function () {
     modifyDbServer(serverId, (server) => {
       server.modules.push(modules[req.body.Discat_Module_Name]);
-      res.sendStatus(200);
+      
     });
+    res.sendStatus(200);
   }, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
 
   // TODO loadcommands
