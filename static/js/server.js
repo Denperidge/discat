@@ -1,3 +1,17 @@
+function loadServerModules(){
+    var serverModulesRequest = new XMLHttpRequest();
+    serverModulesRequest.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200)
+        var selection = document.getElementById("selection");
+        selection.innerHTML = serverModulesRequest.responseText + selection.innerHTML;
+    }
+    serverModulesRequest.open("GET", "/servermodules", true);
+    serverModulesRequest.setRequestHeader("Content-Type", "application/json");
+    serverModulesRequest.send(JSON.stringify({
+        "Discord_Server_Id": document.body.id
+    }));
+}
+
 var menuRequest = new XMLHttpRequest();
 menuRequest.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200)
