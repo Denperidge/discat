@@ -48,17 +48,17 @@ function loadModules() {
   fs.readdir("discat-modules/modules/", (err, files) => {
     if (err) throw err;
 
-    var newModules = {};  // Don't change modules one by one, but all at once by using modules = newModules
-    var newCommands;  // Don't change commands one by one, but all at once by using commands = newCommands
-
+    var newModules = [];  // Don't change modules one by one, but all at once by using modules = newModules
+  
     for (var i = 0; i < files.length; i++) {
       var discatModule = files[i];
 
       var description = fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/description.txt", "utf8");
 
-      newModules[discatModule] = {};
-      newModules[discatModule].name = discatModule;
-      newModules[discatModule].description = description;
+      newModule = {};
+      newModule.name = discatModule;
+      newModule.description = description;
+      newModules.push(newModule)
 
       /* TODO serversettings
       fs.readFile(__dirname + "/discat-modules/modules/" + module + "/serversettings.pug", (err, data) => {
