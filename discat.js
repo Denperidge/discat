@@ -279,7 +279,7 @@ app.post("/removemodule", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   // Check if user is authorized to access server settings
   checkIfUserOwnsDiscatServer(serverId, req, function () {
-    modifyDbServer(serveRId, (server) => {
+    modifyDbServer(serverId, (server) => {
       var moduleName = req.body.Discat_Module_Name;
       
       // Should only be one, but can't grab [0] if length == 0
