@@ -36,9 +36,6 @@ function loadDiscatServers() {
           id: serverId,
           prefix: "!",
         });
-        server.save((err, server) => {
-          if (err) throw err;
-        });
       }
     });
   });
@@ -147,6 +144,9 @@ function modifyDbServer(serverId, modification) {
   dbServer.find({ id: serverId }, (err, servers) => {
     if (err) throw err;
     modification(servers[0]);
+    servers[0].save((err, server) => {
+      if (err) throw err;
+    });
   });
 }
 
