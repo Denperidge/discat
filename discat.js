@@ -265,7 +265,9 @@ app.post("/addmodule", (req, res) => {
         res.status(409).send("Module already added to server!");
         return;
       }
-      server.modules.push(modules[req.body.Discat_Module_Name]);
+      
+      // Add module with correct name to the server.modules by filtering from discat.modules
+      server.modules.push(modules.filter(module => (module.name == moduleName))[0]);
       server.save((err, server) => { if (err) throw err; });
       res.sendStatus(200);
     });
@@ -280,11 +282,6 @@ app.get("/servermodules", (req, res) => {
   checkIfUserOwnsDiscatServer(serverId, req, function () {
     dbServer.find({ id: serverId }, (err, servers) => {
       if (err) throw err;
-
-      if (servers[0].modules.length == 0){
-        res.status(404).send("No modules installed!");
-        return;
-      }
 
       res.render("modules", {
         modules: servers[0].modules,
