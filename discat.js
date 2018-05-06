@@ -250,7 +250,7 @@ app.get("/server", (req, res) => {
 });
 
 app.get("/allmodules", (req, res) => {
-  res.render("allmodules", {
+  res.render("modules", {
     keys: Object.keys(modules),
     modules: modules
   });
@@ -273,6 +273,21 @@ app.post("/addmodule", (req, res) => {
   }, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
 
   // TODO loadcommands
+});
+
+app.get("/servermodules", (req, res) => {
+  var serverId = req.body.Discord_Server_Id;
+  // Check if user is authorized to access server settings
+  checkIfUserOwnsDiscatServer(serverId, req, function () {
+    dbServer.find({ id: serverId }, (err, servers) => {
+      if (err) throw err;
+
+      res.render("modules", {
+        keys: Object.keys(modules),
+        modules: servers[0].modules
+      });
+    });
+  });
 });
 
 app.post("/removemodule", (req, res) => {
