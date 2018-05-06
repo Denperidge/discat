@@ -283,7 +283,7 @@ app.get("/servermodules", (req, res) => {
       if (err) throw err;
 
       res.render("modules", {
-        keys: Object.keys(modules),
+        keys: Object.keys(servers[0].modules),
         modules: servers[0].modules
       });
     });
