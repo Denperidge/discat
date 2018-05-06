@@ -287,7 +287,7 @@ app.get("/servermodules", (req, res) => {
         modules: servers[0].modules
       });
     });
-  });
+  }, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
 });
 
 app.post("/removemodule", (req, res) => {
