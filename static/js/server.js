@@ -62,3 +62,7 @@ function removeModule(moduleName){
         "Discat_Module_Name": moduleName
     }));
 }
+
+function openModuleSettings(moduleName){
+    
+}

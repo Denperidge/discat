@@ -5,7 +5,7 @@
             span #{modules[i].description}
             if serverModule
                 if modules[i].hasserversettings
-                    button(onclick="openServerSettings(\"" + modules[i].name + "\");") Settings
+                    button(onclick="openModuleSettings(\"" + modules[i].name + "\");") Settings
                 button(onclick="removeModule(\"" + modules[i].name + "\");") Remove
             else
                 button(onclick="addModule(\"" + modules[i].name + "\");") Add module to server
