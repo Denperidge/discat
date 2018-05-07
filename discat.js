@@ -233,16 +233,16 @@ app.get("/servers", (req, res) => {
   });
 });
 
-function checkIfUserOwnsDiscatServer(id, req, successCallback, unauthorizedCallback, notFoundCallback) {
+function checkIfUserOwnsDiscatServer(id, req, res, successCallback) {
   if (client.joinedServers.includes(id))  // Check if Discat is in the server
     if (req.session.ownedServers.includes(id))  // Check if user owns server
       successCallback(id);
-    else unauthorizedCallback();  // If user isn't allowed, return to server selection with 403 Forbidden
-  else notFoundCallback();  // If discat isn't in the server, return to server selection with 404, Discat not found on the server
+    else res.status(403).send("You don't own this server"); // If user doesn't own the server, return 403 Forbidden
+  else res.status(404).send("Discat is not added on this server");  // If discat isn't in the server, return 404 Not Found
 }
 
 app.get("/server", (req, res) => {
-  checkIfUserOwnsDiscatServer(req.query.id, req, function () {
+  checkIfUserOwnsDiscatServer(req.query.id, req, res, function () {
     var serverId = req.query.id;
     dbServer.find({ id: serverId }, (err, servers) => {
       if (err) throw err;
@@ -251,7 +251,7 @@ app.get("/server", (req, res) => {
         showModuleSettings: true
       });
     }); 
-  }, () => { res.redirect("/servers?error=403") }, () => { res.redirect("/servers?error=404") });
+  });
 });
 
 app.get("/allmodules", (req, res) => {
@@ -263,19 +263,19 @@ app.get("/allmodules", (req, res) => {
 app.patch("/saveserversettings", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   // Check if user is authorized to access server settings
-  checkIfUserOwnsDiscatServer(serverId, req, function () {
+  checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     modifyDbServer(serverId, (server) => {
       server.prefix = req.body.Discat_Prefix;
       server.save((err, server) => { if (err) throw err; });
       res.sendStatus(200);
     });
   });
-}, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
+});
 
 app.post("/addmodule", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   // Check if user is authorized to access server settings
-  checkIfUserOwnsDiscatServer(serverId, req, function () {
+  checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     modifyDbServer(serverId, (server) => {
       var moduleName = req.body.Discat_Module_Name;
       if (server.modules.filter(module => (module.name == moduleName)).length >= 1){
@@ -288,7 +288,7 @@ app.post("/addmodule", (req, res) => {
       server.save((err, server) => { if (err) throw err; });
       res.sendStatus(200);
     });
-  }, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
+  });
 
   // TODO loadcommands
 });
@@ -296,7 +296,7 @@ app.post("/addmodule", (req, res) => {
 app.delete("/removemodule", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   // Check if user is authorized to access server settings
-  checkIfUserOwnsDiscatServer(serverId, req, function () {
+  checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     modifyDbServer(serverId, (server) => {
       var moduleName = req.body.Discat_Module_Name;
       
