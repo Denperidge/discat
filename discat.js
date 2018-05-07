@@ -56,10 +56,12 @@ function loadModules() {
       newModule = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/config.json", "utf8"));
 
       if (fs.existsSync(__dirname + "/discat-modules/modules/" + discatModule + "/serversettings.pug"))
-        newModule.serversettings = fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/serversettings.pug");
+        newModule.hasserversettings = true;
+      else newModule.hasserversettings = false;
 
       if (fs.existsSync(__dirname + "/discat-modules/modules/" + discatModule + "/usersettings.pug"))
-        newModule.usersettings = fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/usersettings.pug");
+        newModule.hasusersettings = true;
+      else newModule.hasusersettings = false;
 
       newModules.push(newModule);
     }
@@ -284,7 +286,9 @@ app.post("/addmodule", (req, res) => {
       // Convert the website module to an object with all the necessary info for the database
       var moduleForDatabase = {
         name: websiteModule.name,  // Save name for usage in loadCommands
-        settings: websiteModule.defaults  // Set the defaults as current options, again for usage in loadCommands
+        settings: websiteModule.defaults,  // Set the defaults as current options, again for usage in loadCommands
+        hasserversettings: websiteModule.hasserversettings,
+        hasusersettings: websiteModule.hasusersettings
       };
       server.modules.push(moduleForDatabase);
       server.save((err, server) => { if (err) throw err; });
