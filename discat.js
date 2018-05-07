@@ -53,12 +53,10 @@ function loadModules() {
     for (var i = 0; i < files.length; i++) {
       var discatModule = files[i];
 
-      var description = fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/description.txt", "utf8");
+      //var description = fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/description.txt", "utf8");
 
-      newModule = {};
-      newModule.name = discatModule;
-      newModule.description = description;
-      newModules.push(newModule)
+      newModule = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/config.json", "utf8"));
+      newModules.push(newModule);
 
       /* TODO serversettings
       fs.readFile(__dirname + "/discat-modules/modules/" + module + "/serversettings.pug", (err, data) => {
