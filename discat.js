@@ -247,7 +247,8 @@ app.get("/server", (req, res) => {
     dbServer.find({ id: serverId }, (err, servers) => {
       if (err) throw err;
       res.render("server", {
-        server: servers[0]
+        server: servers[0],
+        showServerSettings: true
       });
     }); 
   }, () => { res.redirect("/servers?error=403") }, () => { res.redirect("/servers?error=404") });
