@@ -248,7 +248,7 @@ app.get("/server", (req, res) => {
       if (err) throw err;
       res.render("server", {
         server: servers[0],
-        showServerSettings: true
+        showModuleSettings: true
       });
     }); 
   }, () => { res.redirect("/servers?error=403") }, () => { res.redirect("/servers?error=404") });
