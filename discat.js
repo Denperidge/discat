@@ -280,6 +280,7 @@ app.post("/addmodule", (req, res) => {
   // TODO loadcommands
 });
 
+/*
 app.get("/servermodules", (req, res) => {
   var serverId = req.query.DiscordServerId;
   // Check if user is authorized to access server settings
@@ -294,6 +295,7 @@ app.get("/servermodules", (req, res) => {
     });
   }, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
 });
+*/
 
 app.delete("/removemodule", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
