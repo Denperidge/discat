@@ -308,9 +308,7 @@ app.delete("/removemodule", (req, res) => {
         res.status(409).send("Can't remove module that isn't added to the server!");
         return;
       }
-      console.log(modulesWithCorrectName[0]);
       server.modules.splice(server.modules.indexOf(modulesWithCorrectName[0]), 1);
-      console.log(server.modules);
       server.save((err, server) => { if (err) throw err; });
     });
     // TODO loadcommands
