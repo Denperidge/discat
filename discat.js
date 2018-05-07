@@ -243,9 +243,13 @@ function checkIfUserOwnsDiscatServer(id, req, successCallback, unauthorizedCallb
 
 app.get("/server", (req, res) => {
   checkIfUserOwnsDiscatServer(req.query.id, req, function () {
-    res.render("server", {
-      serverId: req.query.id
-    });  // TODO pass servers' installed modules
+    var serverId = req.query.id;
+    dbServer.find({ id: serverId }, (err, servers) => {
+      if (err) throw err;
+      res.render("server", {
+        server: servers[0]
+      });
+    }); 
   }, () => { res.redirect("/servers?error=403") }, () => { res.redirect("/servers?error=404") });
 });
 

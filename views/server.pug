@@ -3,9 +3,15 @@ head
     link(href="select.css" rel="stylesheet")
     style
         include server.css
-body(id=serverId)
+body(id=server.id)
     h1= "Server config"
     div#menu
+    div#settings
+        if server.prefix != null
+            input#prefix(type="text" placeholder="prefix") server.prefix
+        else
+            input#prefix(type="text" placeholder="prefix")
+        button(onclick="saveServerSettings();") Save
     div#selection
         a(onclick="showAvailableModules();")
             div 
