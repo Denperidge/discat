@@ -310,6 +310,7 @@ app.delete("/removemodule", (req, res) => {
       }
       server.modules.splice(server.modules.indexOf(modulesWithCorrectName[0]), 1);
       server.save((err, server) => { if (err) throw err; });
+      res.sendStatus(200);
     });
     // TODO loadcommands
   });
