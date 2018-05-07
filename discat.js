@@ -245,7 +245,7 @@ app.get("/server", (req, res) => {
       if (err) throw err;
       res.render("server", {
         server: servers[0],
-        showModuleSettings: true
+        serverModule: true,
       });
     });
   });
@@ -287,8 +287,7 @@ app.post("/addmodule", (req, res) => {
       var moduleForDatabase = {
         name: websiteModule.name,  // Save name for usage in loadCommands
         settings: websiteModule.defaults,  // Set the defaults as current options, again for usage in loadCommands
-        hasserversettings: websiteModule.hasserversettings,
-        hasusersettings: websiteModule.hasusersettings
+        hasserversettings: websiteModule.hasserversettings  // Whether to load in server settings and show server settings button
       };
       server.modules.push(moduleForDatabase);
       server.save((err, server) => { if (err) throw err; });
