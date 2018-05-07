@@ -8,7 +8,7 @@ body(id=server.id)
     div#menu
     div#settings
         if server.prefix != null
-            input#prefix(type="text" placeholder="prefix") server.prefix
+            input#prefix(type="text" placeholder="prefix" value=server.prefix)
         else
             input#prefix(type="text" placeholder="prefix")
         button(onclick="saveServerSettings();") Save
