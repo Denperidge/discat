@@ -272,14 +272,19 @@ app.post("/addmodule", (req, res) => {
   // Check if user is authorized to access server settings
   checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     modifyDbServer(serverId, (server) => {
-      var moduleName = req.body.Discat_Module_Name;
-      if (server.modules.filter(module => (module.name == moduleName)).length >= 1){
+      var discatModule;
+
+      if ((discatModule = server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0]) == undefined){
         res.status(409).send("Module already added to server!");
         return;
       }
       
-      // Add module with correct name to the server.modules by filtering from discat.modules
-      server.modules.push(modules.filter(module => (module.name == moduleName))[0]);
+      // Convert the website module to an object with all the necessary info for the database
+      var moduleForDatabase = {
+        name: discatModule.name,  // Save name for usage in loadCommands
+        settings: discatModule.defaults  // Set the defaults as current options, again for usage in loadCommands
+      };
+      server.modules.push(moduleForDatabase);
       server.save((err, server) => { if (err) throw err; });
       res.sendStatus(200);
     });
