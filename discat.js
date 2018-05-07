@@ -281,23 +281,6 @@ app.post("/addmodule", (req, res) => {
   // TODO loadcommands
 });
 
-/*
-app.get("/servermodules", (req, res) => {
-  var serverId = req.query.DiscordServerId;
-  // Check if user is authorized to access server settings
-  checkIfUserOwnsDiscatServer(serverId, req, function () {
-    dbServer.find({ id: serverId }, (err, servers) => {
-      if (err) throw err;
-
-      res.render("modules", {
-        modules: servers[0].modules,
-        showModuleSettings: true
-      });
-    });
-  }, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
-});
-*/
-
 app.delete("/removemodule", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   // Check if user is authorized to access server settings

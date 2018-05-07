@@ -1,16 +1,3 @@
-function loadServerModules() {
-    var serverModulesRequest = new XMLHttpRequest();
-    serverModulesRequest.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200){
-            var selection = document.getElementById("selection");
-            selection.innerHTML = serverModulesRequest.responseText + selection.innerHTML;
-        }
-    }
-    serverModulesRequest.open("GET", "/servermodules?DiscordServerId=" + document.body.id, true);
-    serverModulesRequest.send();
-}
-loadServerModules();
-
 var menuRequest = new XMLHttpRequest();
 menuRequest.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200)
