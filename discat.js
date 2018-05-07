@@ -260,6 +260,18 @@ app.get("/allmodules", (req, res) => {
   });
 });
 
+app.patch("/saveserversettings", (req, res) => {
+  var serverId = req.body.Discord_Server_Id;
+  // Check if user is authorized to access server settings
+  checkIfUserOwnsDiscatServer(serverId, req, function () {
+    modifyDbServer(serverId, (server) => {
+      server.prefix = req.body.Discat_Prefix;
+      server.save((err, server) => { if (err) throw err; });
+      res.sendStatus(200);
+    });
+  });
+}, () => { res.sendStatus(403) }, () => { res.status(404).send("Discat not in Discord server") });
+
 app.post("/addmodule", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   // Check if user is authorized to access server settings

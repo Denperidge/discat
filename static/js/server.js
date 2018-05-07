@@ -21,6 +21,20 @@ function showAvailableModules() {
     menuRequest.send();
 }
 
+function saveServerSettings(){
+    var saveServerSettingsRequest = new XMLHttpRequest();
+    saveServerSettingsRequest.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200)
+            alert("Server settings saved!");
+    }
+    saveServerSettingsRequest.open("PATCH", "/saveserversettings", true);
+    saveServerSettingsRequest.setRequestHeader("Content-Type", "application/json");
+    saveServerSettingsRequest.send(JSON.stringify({
+        "Discord_Server_Id": document.body.id,
+        "Discat_Prefix": document.getElementById("prefix").value
+    }));
+}
+
 function addModule(moduleName) {
     var addModuleRequest = new XMLHttpRequest();
     addModuleRequest.onreadystatechange = function () {
