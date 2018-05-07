@@ -274,7 +274,7 @@ app.post("/addmodule", (req, res) => {
     modifyDbServer(serverId, (server) => {
       var discatModule;
 
-      if ((discatModule = server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0]) == undefined){
+      if ((discatModule = server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0]) != undefined){
         res.status(409).send("Module already added to server!");
         return;
       }
