@@ -25,7 +25,7 @@ function saveServerSettings(){
     var saveServerSettingsRequest = new XMLHttpRequest();
     saveServerSettingsRequest.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200)
-            alert("Server settings saved!");
+            location.reload();
     }
     saveServerSettingsRequest.open("PATCH", "/saveserversettings", true);
     saveServerSettingsRequest.setRequestHeader("Content-Type", "application/json");
@@ -39,7 +39,7 @@ function addModule(moduleName) {
     var addModuleRequest = new XMLHttpRequest();
     addModuleRequest.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200)
-            alert("Module added!");
+            location.reload();
     }
     addModuleRequest.open("POST", "/addmodule", true);
     addModuleRequest.setRequestHeader("Content-Type", "application/json");
@@ -53,7 +53,7 @@ function removeModule(moduleName){
     var removeModuleRequest = new XMLHttpRequest();
     removeModuleRequest.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200)
-            alert("Module removed!");
+            location.reload();
     }
     removeModuleRequest.open("DELETE", "/removemodule", true);
     removeModuleRequest.setRequestHeader("Content-Type", "application/json");
