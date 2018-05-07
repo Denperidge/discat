@@ -319,6 +319,21 @@ app.delete("/removemodule", (req, res) => {
   });
 });
 
+app.get("/modulesettings", (req, res) => {
+  var moduleName = req.query.modulename;
+  
+  dbServer.find({ id: serverId }, (err, servers) => {
+    if (err) throw err;
+
+    // Get module configuration for that server from database
+    var moduleSettings = servers[0].modules.filter(module => (module.name == moduleName))[0];
+
+    res.render(__dirname + "/discat-modules/modules/" + req.query.modulename + "/serversettings.pug", {
+      settings: moduleSettings
+    });
+  });
+
+});
 
 // App
 app.post("/discatupdate", function (req, res) {
