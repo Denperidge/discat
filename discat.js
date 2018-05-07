@@ -53,18 +53,15 @@ function loadModules() {
     for (var i = 0; i < files.length; i++) {
       var discatModule = files[i];
 
-      //var description = fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/description.txt", "utf8");
-
       newModule = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/config.json", "utf8"));
-      newModules.push(newModule);
 
-      /* TODO serversettings
-      fs.readFile(__dirname + "/discat-modules/modules/" + module + "/serversettings.pug", (err, data) => {
-        newModules[module.command].serversettings = data;
-      });
-      */
+      if (fs.existsSync(__dirname + "/discat-modules/modules/" + discatModule + "/serversettings.pug"))
+        newModule.serversettings = fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/serversettings.pug");
 
-      // TODO usersettings
+      if (fs.existsSync(__dirname + "/discat-modules/modules/" + discatModule + "/usersettings.pug"))
+        newModule.usersettings = fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/usersettings.pug");
+
+      newModules.push(newModule);   
     }
     modules = newModules;
   });
