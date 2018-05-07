@@ -49,7 +49,7 @@ function loadModules() {
     if (err) throw err;
 
     var newModules = [];  // Don't change modules one by one, but all at once by using modules = newModules
-  
+
     for (var i = 0; i < files.length; i++) {
       var discatModule = files[i];
 
@@ -61,7 +61,7 @@ function loadModules() {
       if (fs.existsSync(__dirname + "/discat-modules/modules/" + discatModule + "/usersettings.pug"))
         newModule.usersettings = fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/usersettings.pug");
 
-      newModules.push(newModule);   
+      newModules.push(newModule);
     }
     modules = newModules;
   });
@@ -140,7 +140,7 @@ function modifyDbServer(serverId, modification) {
   dbServer.find({ id: serverId }, (err, servers) => {
     if (err) throw err;
     modification(servers[0]);
-  }); 
+  });
   // To save: server.save((err, server) => { if (err) throw err; });
 }
 
@@ -245,7 +245,7 @@ app.get("/server", (req, res) => {
         server: servers[0],
         showModuleSettings: true
       });
-    }); 
+    });
   });
 });
 
@@ -274,11 +274,11 @@ app.post("/addmodule", (req, res) => {
     modifyDbServer(serverId, (server) => {
       var discatModule;
 
-      if ((discatModule = server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0]) != undefined){
+      if ((discatModule = server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0]) != undefined) {
         res.status(409).send("Module already added to server!");
         return;
       }
-      
+
       // Convert the website module to an object with all the necessary info for the database
       var moduleForDatabase = {
         name: discatModule.name,  // Save name for usage in loadCommands
@@ -299,10 +299,10 @@ app.delete("/removemodule", (req, res) => {
   checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     modifyDbServer(serverId, (server) => {
       var moduleName = req.body.Discat_Module_Name;
-      
+
       // Should only be one, but can't grab [0] if length == 0
       var modulesWithCorrectName = server.modules.filter(module => (module.name == moduleName));
-      if (modulesWithCorrectName.length < 1){
+      if (modulesWithCorrectName.length < 1) {
         res.status(409).send("Can't remove module that isn't added to the server!");
         return;
       }
