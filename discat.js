@@ -279,7 +279,7 @@ app.post("/addmodule", (req, res) => {
         return;
       }
 
-      var websiteModule = modules.modules.filter(module => (module.name == moduleName))[0];
+      var websiteModule = modules.filter(module => (module.name == moduleName))[0];
 
       // Convert the website module to an object with all the necessary info for the database
       var moduleForDatabase = {
