@@ -59,11 +59,9 @@ function loadWebsiteModules() {
       if (websiteModule.serverdefault != undefined){
         // Discat will generate an automatic settings page if the client doesn't provide one 
         if (fs.existsSync(__dirname + "/discat-modules/modules/" + moduleName + "/serversettings.pug"))
-        websiteModule.serversettings = "";  // TODO
-        
+          websiteModule.serversettings = 1;  // Serversettings = 1 means that the module has their own serversettings
+        else websiteModule.serversettings = 0;  // Serversettings = 0 means that Discat should auto-generate serversettings
       }
-      else websiteModule.hasserversettings = false;
-      
 
       if (fs.existsSync(__dirname + "/discat-modules/modules/" + moduleName + "/usersettings.pug"))
         websiteModule.hasusersettings = true;
@@ -312,12 +310,12 @@ app.delete("/removemodule", (req, res) => {
       var moduleName = req.body.Discat_Module_Name;
 
       // Should only be one, but can't grab [0] if length == 0
-      var modulesWithCorrectName = server.modules.filter(module => (module.name == moduleName));
-      if (modulesWithCorrectName.length < 1) {
+      var serverModulesWithCorrectName = server.modules.filter(module => (module.name == moduleName));
+      if (serverModulesWithCorrectName.length < 1) {
         res.status(409).send("Can't remove module that isn't added to the server!");
         return;
       }
-      server.modules.splice(server.modules.indexOf(modulesWithCorrectName[0]), 1);
+      server.modules.splice(server.modules.indexOf(serverModulesWithCorrectName[0]), 1);
       server.save((err, server) => { if (err) throw err; });
       res.sendStatus(200);
     });
