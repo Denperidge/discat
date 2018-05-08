@@ -7,6 +7,8 @@
             input(type="text" placeholder=Object.keys(settings[keys[i]])[0] value=settings[keys[i]])
         when "boolean"
             if settings[keys[i]] == true
-                input(type="checkbox" checked) #{Object.keys(settings[keys[i]])[0]}
+                input(type="checkbox" checked)
+                #{Object.keys(settings[keys[i]])[0]}
             else
-                input(type="checkbox") #{Object.keys(settings[keys[i]])[0]}
+                input(type="checkbox")
+                #{Object.keys(settings[keys[i]])[0]}
