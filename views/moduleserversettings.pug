@@ -2,13 +2,13 @@
 - for (var i=0; i < keys.length; i++)
     case typeof settings[keys[i]]
         when "number"
-            input(type="number" placeholder=Object.keys(settings[keys[i]])[0] value=settings[keys[i]])
+            input(type="number" placeholder=keys[i] value=settings[keys[i]])
         when "string"
-            input(type="text" placeholder=Object.keys(settings[keys[i]])[0] value=settings[keys[i]])
+            input(type="text" placeholder=keys[i] value=settings[keys[i]])
         when "boolean"
             if settings[keys[i]] == true
                 input(type="checkbox" checked)
-                span #{Object.keys(settings[keys[i]])[0]}
+                span #{keys[i]}
             else
                 input(type="checkbox")
-                span #{Object.keys(settings[keys[i]])[0]}
+                span #{keys[i]}
