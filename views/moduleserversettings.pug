@@ -4,7 +4,7 @@
         when "number"
             input(type="number" placeholder=Object.keys(settings[keys[i]])[0] value=settings[keys[i]])
         when "string"
-            input(type="string" placeholder=Object.keys(settings[keys[i]])[0] value=settings[keys[i]])
+            input(type="text" placeholder=Object.keys(settings[keys[i]])[0] value=settings[keys[i]])
         when "boolean"
             if settings[keys[i]] == true
                 input(type="checkbox" value=Object.keys(settings[keys[i]])[0] checked)
