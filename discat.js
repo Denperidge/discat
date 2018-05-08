@@ -336,6 +336,7 @@ app.get("/moduleserversettings", (req, res) => {
 
     // Get module configuration for that server from database
     var moduleSettings = servers[0].modules.filter(module => (module.name == moduleName))[0];
+    console.log(moduleSettings);
     if (websiteModule.serversettings == 0)  // if 0, auto generate server settings
       res.render("moduleserversettings", {
         settings: moduleSettings
