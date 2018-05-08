@@ -65,6 +65,6 @@ function removeModule(moduleName){
 
 function openModuleSettings(moduleName){
     openMenu();
-    menuRequest.open("GET", "/moduleserversettings?modulename=" + moduleName, true);
+    menuRequest.open("GET", "/moduleserversettings?serverId=" + document.body.id + "&" + "modulename=" + moduleName, true);
     menuRequest.send();
 }
