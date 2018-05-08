@@ -329,7 +329,7 @@ app.get("/moduleserversettings", (req, res) => {
   var serverId = req.query.serverId
   var moduleName = req.query.modulename;
 
-  dbServer.find({ id: document.body.id }, (err, servers) => {
+  dbServer.find({ id: serverId }, (err, servers) => {
     if (err) throw err;
 
     var websiteModule = websiteModules.filter(module => (module.name == moduleName))[0];
