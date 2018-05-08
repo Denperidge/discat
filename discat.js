@@ -324,9 +324,11 @@ app.delete("/removemodule", (req, res) => {
 });
 
 app.get("/moduleserversettings", (req, res) => {
+  // TODO verify server ownership
+
   var moduleName = req.query.modulename;
 
-  dbServer.find({ id: serverId }, (err, servers) => {
+  dbServer.find({ id: document.body.id }, (err, servers) => {
     if (err) throw err;
 
     var websiteModule = websiteModules.filter(module => (module.name == moduleName))[0];
