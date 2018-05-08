@@ -56,7 +56,7 @@ function loadWebsiteModules() {
       websiteModule = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + moduleName + "/config.json", "utf8"));
 
       // If module has server settings
-      if (websiteModule.serverdefault != undefined) {
+      if (websiteModule.serverdefaults != undefined) {
         // Discat will generate an automatic settings page if the client doesn't provide one 
         if (fs.existsSync(__dirname + "/discat-modules/modules/" + moduleName + "/serversettings.pug"))
           websiteModule.serversettings = 1;  // Serversettings = 1 means that the module has their own serversettings
