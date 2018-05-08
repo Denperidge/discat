@@ -1,7 +1,7 @@
 var menuRequest = new XMLHttpRequest();
 menuRequest.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200)
-        document.getElementById("menu").innerHTML = menuRequest.responseText;
+        document.getElementById("menu").innerHTML += menuRequest.responseText;
 }
 
 function openMenu() {
@@ -75,7 +75,7 @@ function openModuleSettings(moduleName){
     btnSave.id = "btnSave";
     btnSave.innerHTML = "Save";
     btnSave.onclick = function(){
-
+        
     };
     
 
