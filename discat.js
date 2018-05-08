@@ -56,7 +56,7 @@ function loadWebsiteModules() {
       websiteModule = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + moduleName + "/config.json", "utf8"));
 
       // If module has server settings
-      if (websiteModule.serverdefault != undefined){
+      if (websiteModule.serverdefault != undefined) {
         // Discat will generate an automatic settings page if the client doesn't provide one 
         if (fs.existsSync(__dirname + "/discat-modules/modules/" + moduleName + "/serversettings.pug"))
           websiteModule.serversettings = 1;  // Serversettings = 1 means that the module has their own serversettings
@@ -290,9 +290,9 @@ app.post("/addmodule", (req, res) => {
       // Convert the website module to an object with all the necessary info for the server, to store in the database
       var serverModule = {
         name: websiteModule.name,  // Save name for usage in loadCommands
-        settings: websiteModule.defaults,  // Set the defaults as current options, again for usage in loadCommands
-        hasserversettings: websiteModule.hasserversettings  // Whether to load in server settings and show server settings button
+        settings: websiteModule.defaults  // Set the defaults as current options, again for usage in loadCommands
       };
+      if (websiteModule.serversettings != undefined) serverModule.hasserversettings = true;  // Whether to load in server settings and show server settings button
       server.modules.push(serverModule);
       server.save((err, server) => { if (err) throw err; });
       res.sendStatus(200);
@@ -323,19 +323,24 @@ app.delete("/removemodule", (req, res) => {
   });
 });
 
-app.get("/modulesettings", (req, res) => {
+app.get("/moduleserversettings", (req, res) => {
   var moduleName = req.query.modulename;
-  
+
   dbServer.find({ id: serverId }, (err, servers) => {
     if (err) throw err;
 
+    var websiteModule = websiteModules.filter(module => (module.name == moduleName))[0];
+
     // Get module configuration for that server from database
     var moduleSettings = servers[0].modules.filter(module => (module.name == moduleName))[0];
-
-    res.render(__dirname + "/discat-modules/modules/" + req.query.modulename + "/serversettings.pug", {
-      settings: moduleSettings,
-      settingsKeys: Object.keys(moduleSettings)
-    });
+    if (websiteModule.serversettings == 0)  // if 0, auto generate server settings
+      res.render("moduleserversettings", {
+        settings: moduleSettings
+      });
+    else
+      res.render(__dirname + "/discat-modules/modules/" + req.query.modulename + "/serversettings.pug", {
+        settings: moduleSettings
+      });
   });
 
 });
