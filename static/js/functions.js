@@ -1,6 +1,8 @@
 function Focus(parent, opacity, clickthrough, instantFireCallback, callback) {
     // instantFireCallback: should callback be fired after overlay has dissapeared or instantly?
     var overlay = document.createElement("div");
+    overlay.id = "overlay";
+
     overlay.style.position = "fixed";
     overlay.style.left = 0;
     overlay.style.top = 0;
