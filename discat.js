@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 const client = new Discord.Client();
 
 var commands = {};
-var modules = {};
+var websiteModules;  // Modules to render on the website, not specific per server
 /*
 var commands = {
   "429687446566076427": {
@@ -42,30 +42,36 @@ function loadDiscatServers() {
   });
 }
 
-function loadModules() {
+function loadWebsiteModules() {
   const fs = require("fs");
 
   fs.readdir("discat-modules/modules/", (err, files) => {
     if (err) throw err;
 
-    var newModules = [];  // Don't change modules one by one, but all at once by using modules = newModules
+    var newWebsiteModules = [];  // Don't change modules one by one, but all at once by using modules = newModules
 
     for (var i = 0; i < files.length; i++) {
-      var discatModule = files[i];
+      var moduleName = files[i];
 
-      newModule = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + discatModule + "/config.json", "utf8"));
+      websiteModule = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + moduleName + "/config.json", "utf8"));
 
-      if (fs.existsSync(__dirname + "/discat-modules/modules/" + discatModule + "/serversettings.pug"))
-        newModule.hasserversettings = true;
-      else newModule.hasserversettings = false;
+      // If module has server settings
+      if (websiteModule.serverdefault != undefined){
+        // Discat will generate an automatic settings page if the client doesn't provide one 
+        if (fs.existsSync(__dirname + "/discat-modules/modules/" + moduleName + "/serversettings.pug"))
+        websiteModule.serversettings = "";  // TODO
+        
+      }
+      else websiteModule.hasserversettings = false;
+      
 
-      if (fs.existsSync(__dirname + "/discat-modules/modules/" + discatModule + "/usersettings.pug"))
-        newModule.hasusersettings = true;
-      else newModule.hasusersettings = false;
+      if (fs.existsSync(__dirname + "/discat-modules/modules/" + moduleName + "/usersettings.pug"))
+        websiteModule.hasusersettings = true;
+      else websiteModule.hasusersettings = false;
 
-      newModules.push(newModule);
+      newWebsiteModules.push(websiteModule);
     }
-    modules = newModules;
+    websiteModules = newWebsiteModules;
   });
 }
 
@@ -120,7 +126,7 @@ db.once("open", function () {
 
   // Wait 1500ms to make sure Discord client could connect
   setTimeout(() => {
-    loadModules();  // Load all the modules
+    loadWebsiteModules();  // Load all the modules
     loadDiscatServers();  // Load servers Discat is in
   }, 1500);
 
@@ -253,7 +259,7 @@ app.get("/server", (req, res) => {
 
 app.get("/allmodules", (req, res) => {
   res.render("modules", {
-    modules: modules
+    modules: websiteModules
   });
 });
 
@@ -281,15 +287,15 @@ app.post("/addmodule", (req, res) => {
         return;
       }
 
-      var websiteModule = modules.filter(module => (module.name == moduleName))[0];
+      var websiteModule = websiteModules.filter(module => (module.name == moduleName))[0];
 
-      // Convert the website module to an object with all the necessary info for the database
-      var moduleForDatabase = {
+      // Convert the website module to an object with all the necessary info for the server, to store in the database
+      var serverModule = {
         name: websiteModule.name,  // Save name for usage in loadCommands
         settings: websiteModule.defaults,  // Set the defaults as current options, again for usage in loadCommands
         hasserversettings: websiteModule.hasserversettings  // Whether to load in server settings and show server settings button
       };
-      server.modules.push(moduleForDatabase);
+      server.modules.push(serverModule);
       server.save((err, server) => { if (err) throw err; });
       res.sendStatus(200);
     });
@@ -329,7 +335,8 @@ app.get("/modulesettings", (req, res) => {
     var moduleSettings = servers[0].modules.filter(module => (module.name == moduleName))[0];
 
     res.render(__dirname + "/discat-modules/modules/" + req.query.modulename + "/serversettings.pug", {
-      settings: moduleSettings
+      settings: moduleSettings,
+      settingsKeys: Object.keys(moduleSettings)
     });
   });
 
