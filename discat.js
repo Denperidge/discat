@@ -324,29 +324,34 @@ app.delete("/removemodule", (req, res) => {
 });
 
 app.get("/moduleserversettings", (req, res) => {
-  // TODO verify server ownership
-
   var serverId = req.query.serverId
-  var moduleName = req.query.modulename;
+  checkIfUserOwnsDiscatServer(serverId, req, res, function(){
+    dbServer.find({ id: serverId }, (err, servers) => {
+      if (err) throw err;
 
-  dbServer.find({ id: serverId }, (err, servers) => {
-    if (err) throw err;
-
-    var websiteModule = websiteModules.filter(module => (module.name == moduleName))[0];
-
-    // Get module configuration for that server from database
-    var moduleSettings = servers[0].modules.filter(module => (module.name == moduleName))[0].settings;
-    console.log(moduleSettings);
-    if (websiteModule.serversettings == 0)  // if 0, auto generate server settings
-      res.render("moduleserversettings", {
-        settings: moduleSettings
-      });
-    else
-      res.render(__dirname + "/discat-modules/modules/" + req.query.modulename + "/serversettings.pug", {
-        settings: moduleSettings
-      });
+      var moduleName = req.query.modulename;
+      var websiteModule = websiteModules.filter(module => (module.name == moduleName))[0];
+  
+      // Get module configuration for that server from database
+      var moduleSettings = servers[0].modules.filter(module => (module.name == moduleName))[0].settings;
+      
+      if (websiteModule.serversettings == 0)  // if 0, auto generate server settings
+        res.render("moduleserversettings", {
+          settings: moduleSettings
+        });
+      else
+        res.render(__dirname + "/discat-modules/modules/" + req.query.modulename + "/serversettings.pug", {
+          settings: moduleSettings
+        });
+    });
   });
+});
 
+app.patch("/moduleserversettings", (req, res) => {
+  var serverId = req.query.serverId
+  checkIfUserOwnsDiscatServer(serverId, req, res, function(){
+    
+  });
 });
 
 // App
