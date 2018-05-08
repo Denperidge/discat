@@ -8,7 +8,7 @@
         when "boolean"
             if settings[keys[i]] == true
                 input(type="checkbox" checked)
-                #{Object.keys(settings[keys[i]])[0]}
+                span #{Object.keys(settings[keys[i]])[0]}
             else
                 input(type="checkbox")
-                #{Object.keys(settings[keys[i]])[0]}
+                span #{Object.keys(settings[keys[i]])[0]}
