@@ -21,7 +21,7 @@ function showAvailableModules() {
     menuRequest.send();
 }
 
-function saveServerSettings(){
+function saveServerSettings() {
     var saveServerSettingsRequest = new XMLHttpRequest();
     saveServerSettingsRequest.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200)
@@ -49,7 +49,7 @@ function addModule(moduleName) {
     }));
 }
 
-function removeModule(moduleName){
+function removeModule(moduleName) {
     var removeModuleRequest = new XMLHttpRequest();
     removeModuleRequest.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200)
@@ -63,7 +63,7 @@ function removeModule(moduleName){
     }));
 }
 
-function openModuleSettings(moduleName){
+function openModuleSettings(moduleName) {
     openMenu();
     menuRequest.open("GET", "/moduleserversettings?serverId=" + document.body.id + "&" + "modulename=" + moduleName, true);
     menuRequest.send();
@@ -74,15 +74,15 @@ function openModuleSettings(moduleName){
     var btnSave = document.createElement("button");
     btnSave.id = "btnSave";
     btnSave.innerHTML = "Save";
-    btnSave.onclick = function(){
-        
+    btnSave.onclick = function () {
+
     };
-    
+
 
     var btnCancel = document.createElement("button");
     btnCancel.id = "btnCancel";
     btnCancel.innerHTML = "Cancel";
-    btnCancel.onclick = function(){
+    btnCancel.onclick = function () {
         document.getElementById("overlay").click();
     };
 
