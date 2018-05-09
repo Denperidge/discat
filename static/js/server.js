@@ -67,27 +67,4 @@ function openModuleSettings(moduleName) {
     openMenu();
     menuRequest.open("GET", "/moduleserversettings?serverId=" + document.body.id + "&" + "modulename=" + moduleName, true);
     menuRequest.send();
-
-    var buttons = document.createElement("div");
-    buttons.id = "buttons";
-
-    var btnSave = document.createElement("button");
-    btnSave.id = "btnSave";
-    btnSave.innerHTML = "Save";
-    btnSave.onclick = function () {
-
-    };
-
-
-    var btnCancel = document.createElement("button");
-    btnCancel.id = "btnCancel";
-    btnCancel.innerHTML = "Cancel";
-    btnCancel.onclick = function () {
-        document.getElementById("overlay").click();
-    };
-
-    buttons.appendChild(btnCancel);
-    buttons.appendChild(btnSave);
-
-    document.getElementById("menu").appendChild(buttons);
 }
