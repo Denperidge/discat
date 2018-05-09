@@ -324,7 +324,7 @@ app.delete("/removemodule", (req, res) => {
 });
 
 app.get("/moduleserversettings", (req, res) => {
-  var serverId = req.query.serverId
+  var serverId = req.query.serverId;
   checkIfUserOwnsDiscatServer(serverId, req, res, function(){
     dbServer.find({ id: serverId }, (err, servers) => {
       if (err) throw err;
@@ -348,9 +348,10 @@ app.get("/moduleserversettings", (req, res) => {
 });
 
 app.patch("/moduleserversettings", (req, res) => {
-  var serverId = req.query.serverId
+  var serverId = req.body.Discord_Server_Id;
   checkIfUserOwnsDiscatServer(serverId, req, res, function(){
-    
+
+
   });
 });
 
@@ -402,5 +403,4 @@ app.listen(3000, () => {
   var startupTime = `[${day}-${month}-${year} ${time}]`;
 
   console.log(startupTime + " Website enabled on port 3000");
-});
-client.login(require("./config.json").discat_api_key);
+});client.login(require("./config.json").discat_api_key);
