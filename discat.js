@@ -336,7 +336,7 @@ app.get("/moduleserversettings", (req, res) => {
       var moduleSettings = servers[0].modules.filter(module => (module.name == moduleName))[0].settings;
       
       if (websiteModule.serversettings == 0)  // if 0, auto generate server settings
-        res.render("moduleserversettings", {
+        res.render("autogenmodservset", {
           settings: moduleSettings
         });
       else
