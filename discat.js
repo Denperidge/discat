@@ -325,16 +325,16 @@ app.delete("/removemodule", (req, res) => {
 
 app.get("/moduleserversettings", (req, res) => {
   var serverId = req.query.serverId;
-  checkIfUserOwnsDiscatServer(serverId, req, res, function(){
+  checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     dbServer.find({ id: serverId }, (err, servers) => {
       if (err) throw err;
 
       var moduleName = req.query.modulename;
       var websiteModule = websiteModules.filter(module => (module.name == moduleName))[0];
-  
+
       // Get module configuration for that server from database
       var moduleSettings = servers[0].modules.filter(module => (module.name == moduleName))[0].settings;
-      
+
       if (websiteModule.serversettings == 0)  // if 0, auto generate server settings
         res.render("autogenmodservset", {
           settings: moduleSettings
@@ -349,9 +349,10 @@ app.get("/moduleserversettings", (req, res) => {
 
 app.patch("/moduleserversettings", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
-  checkIfUserOwnsDiscatServer(serverId, req, res, function(){
+  checkIfUserOwnsDiscatServer(serverId, req, res, function () {
+    modifyDbServer(serverId, (server) => {
 
-
+    });
   });
 });
 
@@ -403,4 +404,6 @@ app.listen(3000, () => {
   var startupTime = `[${day}-${month}-${year} ${time}]`;
 
   console.log(startupTime + " Website enabled on port 3000");
-});client.login(require("./config.json").discat_api_key);
+});
+
+client.login(require("./config.json").discat_api_key);
