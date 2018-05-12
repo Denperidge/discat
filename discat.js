@@ -351,7 +351,7 @@ app.patch("/moduleserversettings", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     modifyDbServer(serverId, (server) => {
-      var serverModuleSettings = server.modules.filter(module => (module.name == req.body.Discat_Module_Name)).settings;
+      var serverModuleSettings = server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings;
       var newSettings = {};
 
       // Verify that the types of the original settings align with the new settings (so no messing around can be done)
