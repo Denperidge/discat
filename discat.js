@@ -353,12 +353,8 @@ app.patch("/moduleserversettings", (req, res) => {
 
       // Verify that the types of the original settings align with the new settings (so no messing around can be done)
       var serverModuleSettingsKeys = Object.keys(serverModuleSettings);
-      console.log(serverModuleSettings);
       for (var i=0; i < serverModuleSettingsKeys.length; i++){
         var currentSetting = serverModuleSettingsKeys[i];
-        console.log(currentSetting);
-        console.log(typeof serverModuleSettings[currentSetting] + " " + serverModuleSettings[currentSetting])
-        console.log(typeof req.body.Discat_Module_New_Settings[currentSetting] + " " + req.body.Discat_Module_New_Settings[currentSetting])
 
         if (typeof serverModuleSettings[currentSetting] == typeof req.body.Discat_Module_New_Settings[currentSetting])
           // If of the same type, add to the newSettings object
@@ -369,11 +365,8 @@ app.patch("/moduleserversettings", (req, res) => {
         }
       }
 
-      console.log(newSettings);
-      console.log(server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings);
       server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings = newSettings;
-      server.markModified("modules");
-      console.log(server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings);
+      server.markModified("modules");  // Notify Mongoose that modules have changed
       server.save((err, server) => { if (err) throw err; res.sendStatus(200); });
     });
   });
