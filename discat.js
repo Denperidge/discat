@@ -372,7 +372,7 @@ app.patch("/moduleserversettings", (req, res) => {
         }
       }
 
-      serverModuleSettings.settings = newSettings;
+      serverModuleSettings = newSettings;
       server.save((err, server) => { if (err) throw err; });
     });
   });
