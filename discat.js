@@ -289,7 +289,7 @@ app.post("/addmodule", (req, res) => {
       // Convert the website module to an object with all the necessary info for the server, to store in the database
       var serverModule = {
         name: websiteModule.name,  // Save name for usage in loadCommands
-        settings: websiteModule.defaults  // Set the defaults as current options, again for usage in loadCommands
+        settings: websiteModule.serverdefaults  // Set the defaults as current options, again for usage in loadCommands
       };
       if (websiteModule.serversettings != undefined) serverModule.hasserversettings = true;  // Whether to load in server settings and show server settings button
       server.modules.push(serverModule);
