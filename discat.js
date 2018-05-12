@@ -372,6 +372,7 @@ app.patch("/moduleserversettings", (req, res) => {
       console.log(newSettings);
       console.log(server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings);
       server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings = newSettings;
+      server.markModified("modules");
       console.log(server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings);
       server.save((err, server) => { if (err) throw err; res.sendStatus(200); });
     });
