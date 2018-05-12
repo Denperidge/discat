@@ -333,15 +333,15 @@ app.get("/moduleserversettings", (req, res) => {
       var websiteModule = websiteModules.filter(module => (module.name == moduleName))[0];
 
       // Get module configuration for that server from database
-      var moduleSettings = servers[0].modules.filter(module => (module.name == moduleName))[0].settings;
+      var serverModuleSettings = servers[0].modules.filter(module => (module.name == moduleName))[0].settings;
 
       if (websiteModule.serversettings == 0)  // if 0, auto generate server settings
         res.render("autogenmodservset", {
-          settings: moduleSettings
+          settings: serverModuleSettings
         });
       else
         res.render(__dirname + "/discat-modules/modules/" + req.query.modulename + "/serversettings.pug", {
-          settings: moduleSettings
+          settings: serverModuleSettings
         });
     });
   });
@@ -351,7 +351,26 @@ app.patch("/moduleserversettings", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     modifyDbServer(serverId, (server) => {
+      var serverModule = server.modules.filter(module => (module.name == moduleName));
 
+      var newSettings = {};
+
+      // Verify that the types of the original settings align with the new settings (so no messing around can be done)
+      var serverModuleSettings = Object.keys(serverModule);
+      for (var i=0; i < serverModuleSettings.length; i++){
+        var currentSetting = serverModuleSettings[i];
+
+        if (typeof serverModule[currentSetting] == typeof req.body.Discat_Module_New_Settings[currentSetting])
+          // If of the same type, add to the newSettings object
+          newSettings[currentSetting] = req.body.Discat_Module_New_Settings[currentSetting];
+        else {
+          res.sendStatus(409);
+          return;
+        }
+      }
+
+      serverModule.settings = newSettings;
+      server.save((err, server) => { if (err) throw err; });
     });
   });
 });
