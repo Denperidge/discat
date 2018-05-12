@@ -360,6 +360,9 @@ app.patch("/moduleserversettings", (req, res) => {
       for (var i=0; i < serverModuleSettings.length; i++){
         var currentSetting = serverModuleSettings[i];
 
+        console.log(typeof serverModule[currentSetting] + " " + serverModule[currentSetting])
+        console.log(typeof req.body.Discat_Module_New_Settings[currentSetting] + " " + req.body.Discat_Module_New_Settings[currentSetting])
+
         if (typeof serverModule[currentSetting] == typeof req.body.Discat_Module_New_Settings[currentSetting])
           // If of the same type, add to the newSettings object
           newSettings[currentSetting] = req.body.Discat_Module_New_Settings[currentSetting];
