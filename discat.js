@@ -351,19 +351,18 @@ app.patch("/moduleserversettings", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     modifyDbServer(serverId, (server) => {
-      var serverModule = server.modules.filter(module => (module.name == req.body.Discat_Module_Name));
-
+      var serverModuleSettings = server.modules.filter(module => (module.name == req.body.Discat_Module_Name)).settings;
       var newSettings = {};
 
       // Verify that the types of the original settings align with the new settings (so no messing around can be done)
-      var serverModuleSettings = Object.keys(serverModule);
+      var serverModuleSettings = Object.keys(serverModuleSettings);
       for (var i=0; i < serverModuleSettings.length; i++){
         var currentSetting = serverModuleSettings[i];
 
-        console.log(typeof serverModule[currentSetting] + " " + serverModule[currentSetting])
+        console.log(typeof serverModuleSettings[currentSetting] + " " + serverModuleSettings[currentSetting])
         console.log(typeof req.body.Discat_Module_New_Settings[currentSetting] + " " + req.body.Discat_Module_New_Settings[currentSetting])
 
-        if (typeof serverModule[currentSetting] == typeof req.body.Discat_Module_New_Settings[currentSetting])
+        if (typeof serverModuleSettings[currentSetting] == typeof req.body.Discat_Module_New_Settings[currentSetting])
           // If of the same type, add to the newSettings object
           newSettings[currentSetting] = req.body.Discat_Module_New_Settings[currentSetting];
         else {
@@ -372,7 +371,7 @@ app.patch("/moduleserversettings", (req, res) => {
         }
       }
 
-      serverModule.settings = newSettings;
+      serverModuleSettings.settings = newSettings;
       server.save((err, server) => { if (err) throw err; });
     });
   });
