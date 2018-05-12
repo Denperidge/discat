@@ -267,8 +267,7 @@ app.patch("/saveserversettings", (req, res) => {
   checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     modifyDbServer(serverId, (server) => {
       server.prefix = req.body.Discat_Prefix;
-      server.save((err, server) => { if (err) throw err; });
-      res.sendStatus(200);
+      server.save((err, server) => { if (err) throw err; res.sendStatus(200); });
     });
   });
 });
@@ -294,8 +293,7 @@ app.post("/addmodule", (req, res) => {
       };
       if (websiteModule.serversettings != undefined) serverModule.hasserversettings = true;  // Whether to load in server settings and show server settings button
       server.modules.push(serverModule);
-      server.save((err, server) => { if (err) throw err; });
-      res.sendStatus(200);
+      server.save((err, server) => { if (err) throw err; res.sendStatus(200); });
     });
   });
 
@@ -316,8 +314,7 @@ app.delete("/removemodule", (req, res) => {
         return;
       }
       server.modules.splice(server.modules.indexOf(serverModulesWithCorrectName[0]), 1);
-      server.save((err, server) => { if (err) throw err; });
-      res.sendStatus(200);
+      server.save((err, server) => { if (err) throw err; res.sendStatus(200); });
     });
     // TODO loadcommands
   });
@@ -376,8 +373,7 @@ app.patch("/moduleserversettings", (req, res) => {
       console.log(server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings);
       server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings = newSettings;
       console.log(server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings);
-      server.save((err, server) => { if (err) throw err; });
-      res.sendStatus(200);
+      server.save((err, server) => { if (err) throw err; res.sendStatus(200); });
     });
   });
 });
