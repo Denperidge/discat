@@ -351,19 +351,19 @@ app.patch("/moduleserversettings", (req, res) => {
   var serverId = req.body.Discord_Server_Id;
   checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     modifyDbServer(serverId, (server) => {
-      var serverModuleSettings = server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings;
+      var serverModule = server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0];
       var newSettings = {};
 
       // Verify that the types of the original settings align with the new settings (so no messing around can be done)
-      var serverModuleSettingsKeys = Object.keys(serverModuleSettings);
-      console.log(serverModuleSettings);
+      var serverModuleSettingsKeys = Object.keys(serverModule.settings);
+      console.log(serverModule.settings);
       for (var i=0; i < serverModuleSettingsKeys.length; i++){
         var currentSetting = serverModuleSettingsKeys[i];
         console.log(currentSetting);
-        console.log(typeof serverModuleSettings[currentSetting] + " " + serverModuleSettings[currentSetting])
+        console.log(typeof serverModule.settings[currentSetting] + " " + serverModule.settings[currentSetting])
         console.log(typeof req.body.Discat_Module_New_Settings[currentSetting] + " " + req.body.Discat_Module_New_Settings[currentSetting])
 
-        if (typeof serverModuleSettings[currentSetting] == typeof req.body.Discat_Module_New_Settings[currentSetting])
+        if (typeof serverModule.settings[currentSetting] == typeof req.body.Discat_Module_New_Settings[currentSetting])
           // If of the same type, add to the newSettings object
           newSettings[currentSetting] = req.body.Discat_Module_New_Settings[currentSetting];
         else {
@@ -372,7 +372,7 @@ app.patch("/moduleserversettings", (req, res) => {
         }
       }
 
-      serverModuleSettings = newSettings;
+      serverModule.settings = newSettings;
       server.save((err, server) => { if (err) throw err; });
       res.sendStatus(200);
     });
