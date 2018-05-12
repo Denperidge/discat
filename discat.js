@@ -356,9 +356,10 @@ app.patch("/moduleserversettings", (req, res) => {
 
       // Verify that the types of the original settings align with the new settings (so no messing around can be done)
       var serverModuleSettings = Object.keys(serverModuleSettings);
+      console.log(serverModuleSettings);
       for (var i=0; i < serverModuleSettings.length; i++){
         var currentSetting = serverModuleSettings[i];
-
+        console.log(currentSetting);
         console.log(typeof serverModuleSettings[currentSetting] + " " + serverModuleSettings[currentSetting])
         console.log(typeof req.body.Discat_Module_New_Settings[currentSetting] + " " + req.body.Discat_Module_New_Settings[currentSetting])
 
