@@ -24,3 +24,21 @@ a {
 
     text-decoration: none;
 }
+
+#menu {
+    width: 40%;
+    height: 0%;
+    transition: height 2s;
+
+    margin: 20px auto;
+    padding: 10px;
+
+    visibility: hidden;
+
+    background-color: #adbdcc;
+
+    border: 1px solid #97a5b2;
+    border-radius: 5%;
+
+    z-index: 1;
+}
