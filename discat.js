@@ -73,6 +73,30 @@ function loadWebsiteModules() {
   });
 }
 
+function loadCommands(serverId) {
+  dbServer.find({ id: serverId }, (err, servers) => {
+
+    commands[serverId] = {};  // Add server to commands object
+
+    var prefix = servers[0].prefix;  // Get the prefix used in that server
+    var serverModules = servers[0].modules;  // Get the modules that server has installed
+    var serverModuleNames = Object.keys(serverModules);  // Get the names of each module
+
+    // Scroll through servers' modules
+    for (var i = 0; i < serverModuleNames.length; i++) {
+      var serverModuleName = serverModuleNames[i];  // Name of module currently being handled
+
+      // Get the commands of each installed modules
+      var commandsToAdd = require(__dirname + "/discat-modules/modules/" + serverModuleName + "/module.js").getCommands(serverModules[serverModuleName].settings);
+
+      // For each command of the module, add to the commands object
+      for (var i = 0; i < commandsToAdd.length; i++)
+        commands[serverId][prefix + commandsToAdd[i].command] = commandsToAdd[i].reply;
+    }
+  });
+
+}
+
 client.on('ready', () => {
   var date = new Date();
   var day = date.getDate();
@@ -126,6 +150,11 @@ db.once("open", function () {
   setTimeout(() => {
     loadWebsiteModules();  // Load all the modules
     loadDiscatServers();  // Load servers Discat is in
+
+    // Load commands for each server Discat is in
+    for (var i = 0; i < client.joinedServers.length; i++) {
+      loadCommands(client.joinedServers[i]);
+    }
   }, 1500);
 
   var date = new Date();
@@ -267,7 +296,7 @@ app.patch("/saveserversettings", (req, res) => {
   checkIfUserOwnsDiscatServer(serverId, req, res, function () {
     modifyDbServer(serverId, (server) => {
       server.prefix = req.body.Discat_Prefix;
-      server.save((err, server) => { if (err) throw err; res.sendStatus(200); });
+      server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
     });
   });
 });
@@ -293,11 +322,9 @@ app.post("/addmodule", (req, res) => {
       };
       if (websiteModule.serversettings != undefined) serverModule.hasserversettings = true;  // Whether to load in server settings and show server settings button
       server.modules.push(serverModule);
-      server.save((err, server) => { if (err) throw err; res.sendStatus(200); });
+      server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
     });
   });
-
-  // TODO loadcommands
 });
 
 app.delete("/removemodule", (req, res) => {
@@ -314,9 +341,8 @@ app.delete("/removemodule", (req, res) => {
         return;
       }
       server.modules.splice(server.modules.indexOf(serverModulesWithCorrectName[0]), 1);
-      server.save((err, server) => { if (err) throw err; res.sendStatus(200); });
+      server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
     });
-    // TODO loadcommands
   });
 });
 
@@ -353,7 +379,7 @@ app.patch("/moduleserversettings", (req, res) => {
 
       // Verify that the types of the original settings align with the new settings (so no messing around can be done)
       var serverModuleSettingsKeys = Object.keys(serverModuleSettings);
-      for (var i=0; i < serverModuleSettingsKeys.length; i++){
+      for (var i = 0; i < serverModuleSettingsKeys.length; i++) {
         var currentSetting = serverModuleSettingsKeys[i];
 
         if (typeof serverModuleSettings[currentSetting] == typeof req.body.Discat_Module_New_Settings[currentSetting])
@@ -367,7 +393,7 @@ app.patch("/moduleserversettings", (req, res) => {
 
       server.modules.filter(module => (module.name == req.body.Discat_Module_Name))[0].settings = newSettings;
       server.markModified("modules");  // Notify Mongoose that modules have changed
-      server.save((err, server) => { if (err) throw err; res.sendStatus(200); });
+      server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
     });
   });
 });
