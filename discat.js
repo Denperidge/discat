@@ -12,15 +12,6 @@ const client = new Discord.Client();
 
 var commands = {};
 var websiteModules;  // Modules to render on the website, not specific per server
-/*
-var commands = {
-  "429687446566076427": {
-    "ping": function (msg) {
-      msg.reply("pong");
-    }
-  }
-};
-*/
 
 // Runs at startup and on server join/leave
 function loadDiscatServers() {
@@ -80,18 +71,12 @@ function loadCommands(serverId) {
 
     var prefix = servers[0].prefix;  // Get the prefix used in that server
     var serverModules = servers[0].modules;  // Get the modules that server has installed
-    //var serverModuleNames = Object.keys(serverModules);  // Get the names of each module
-    console.log(prefix);
-    console.log(serverModules);
-    //console.log(serverModuleNames);
 
     // Scroll through servers' modules
     for (var i = 0; i < serverModules.length; i++) {
       var serverModuleName = serverModules[i].name;  // Name of module currently being handled
 
       // Get the commands of each installed modules
-      console.log(serverModules.filter(module => (module.name == serverModuleName))[0].settings);
-      console.log(serverModules.filter(module => (module.name == serverModuleName))[0].settings.pong);
       var commandsToAdd = require(__dirname + "/discat-modules/modules/" + serverModuleName + "/module.js").getCommands(
         serverModules.filter(module => (module.name == serverModuleName))[0].settings);
 
@@ -121,12 +106,9 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-  console.log("message");
-  console.log(commands);
   var guild; var reply;
   if (msg.author == client.user || commands[(guild = msg.guild.id)] == null) return;
   if ((reply = commands[guild][msg.content.toLowerCase()]) == null) return;
-  console.log(reply);
   reply(msg);
 });
 
@@ -161,11 +143,8 @@ db.once("open", function () {
     loadDiscatServers();  // Load servers Discat is in
 
     // Load commands for each server Discat is in
-    console.log(client.joinedServers);
-    for (var i = 0; i < client.joinedServers.length; i++) {
+    for (var i = 0; i < client.joinedServers.length; i++)
       loadCommands(client.joinedServers[i]);
-      console.log(commands);
-    }
   }, 1500);
 
   var date = new Date();
