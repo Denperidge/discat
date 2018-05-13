@@ -231,7 +231,6 @@ app.get("/servers", (req, res) => {
 
   request.get(options, (error, response, body) => {
     var allServers = JSON.parse(body);
-    console.log(allServers);
     var ownedServers = [];
     var serversToPush = [];
     for (var i = 0; i < allServers.length; i++) {
