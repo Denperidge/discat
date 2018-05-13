@@ -1,0 +1,16 @@
+head
+    title= "User config"
+    link(href="stylesheet.css" rel="stylesheet")
+    style
+        include server.css
+body(id=server.id)
+    h1= "User config"
+    div#menu
+    div#modules
+        include modules.pug
+        a(onclick="showAvailableModules();")
+            div 
+                span Add module
+    script(src="functions.js")
+    script(src="user.js")
+

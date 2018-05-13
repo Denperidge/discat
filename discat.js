@@ -388,6 +388,13 @@ app.patch("/moduleserversettings", (req, res) => {
   });
 });
 
+app.get("/user", (req, res) => {
+  res.render("user", {
+    modules: websiteModules.filter(websiteModule => (websiteModule.hasusersettings == true)),
+    userModule: true
+  });
+});
+
 // App
 app.post("/discatupdate", function (req, res) {
   try {
