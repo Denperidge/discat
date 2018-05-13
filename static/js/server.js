@@ -1,20 +1,3 @@
-var menuRequest = new XMLHttpRequest();
-menuRequest.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200)
-        document.getElementById("menu").innerHTML += menuRequest.responseText;
-}
-
-function openMenu() {
-    var menu = document.getElementById("menu");
-    Focus(menu, 0.5, false, true, function () {
-        menu.style.visibility = "hidden";
-        menu.style.height = "0%";
-        menu.innerHTML = "";
-    });
-    menu.style.visibility = "visible";
-    menu.style.height = "80%";
-}
-
 function showAvailableModules() {
     openMenu();
     menuRequest.open("GET", "/allmodules", true);
