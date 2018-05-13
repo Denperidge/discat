@@ -120,6 +120,7 @@ client.on('ready', () => {
 
 client.on('message', msg => {
   console.log("message");
+  console.log(commands);
   var guild; var reply;
   if (msg.author == client.user || commands[(guild = msg.guild.id)] == null) return;
   if ((reply = commands[guild][msg.content.toLowerCase()]) == null) return;
@@ -163,7 +164,7 @@ db.once("open", function () {
       loadCommands(client.joinedServers[i]);
       console.log(commands);
     }
-  }, 3000);
+  }, 1500);
 
   var date = new Date();
   var day = date.getDate();
