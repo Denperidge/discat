@@ -108,7 +108,7 @@ client.on('ready', () => {
 client.on('message', msg => {
   var guild; var reply;
   if (msg.author == client.user || commands[(guild = msg.guild.id)] == null) return;
-  if ((reply = commands[guild][msg.content.toLowerCase()]) == null) return;
+  if ((reply = commands[guild][msg.content.toLowerCase().split(" ")[0]]) == null) return;
   reply(msg);
 });
 
@@ -190,7 +190,8 @@ app.get("/login", (req, res) => {
     res.redirect("/select");  // let him select server or user settings
   }  // If user isn't logged in
   else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /auth
-    "https://discordapp.com/api/oauth2/authorize?client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Fauth&response_type=code&scope=guilds");
+    "https://discordapp.com/api/oauth2/authorize?" + 
+    "client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Fauth&response_type=code&scope=guilds%20identify");
 });
 
 app.get("/logout", (req, res) => {
