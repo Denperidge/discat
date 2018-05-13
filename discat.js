@@ -187,7 +187,27 @@ app.use(session({
 
 app.get("/login", (req, res) => {
   if (req.session.accessToken != null) {  // If user is logged in
-    res.redirect("/select");  // let him select server or user settings
+    // Save the user ID in session
+    var options = {
+      url: "https://discordapp.com/api/users/@me",
+      headers: {
+        "Authorization": req.session.accessToken,
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }
+  
+    request.get(options, (error, response, body) => {
+      var user = JSON.parse(body);
+  
+      req.session.user = {
+        id: user.id,
+        username: user.username,
+        discriminator: user.discriminator,
+        avatar: user.avatar
+      };
+    
+      res.redirect("/select");  // let him select server or user settings
+    });
   }  // If user isn't logged in
   else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /auth
     "https://discordapp.com/api/oauth2/authorize?" + 
