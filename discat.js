@@ -162,7 +162,7 @@ db.once("open", function () {
       loadCommands(client.joinedServers[i]);
       console.log(commands);
     }
-  }, 1500);
+  }, 3000);
 
   var date = new Date();
   var day = date.getDate();
