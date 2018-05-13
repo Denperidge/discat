@@ -10,6 +10,10 @@ const mongoose = require("mongoose");
 // Bot
 const client = new Discord.Client();
 
+// Store client id and secret in memory
+clientId = require("./config.json").discat_client_id;
+clientSecret = require("./config.json").discat_client_secret;
+
 var commands = {};
 var websiteModules;  // Modules to render on the website, not specific per server
 
@@ -99,10 +103,6 @@ client.on('ready', () => {
   var startupTime = `[${day}-${month}-${year} ${time}]`;
 
   console.log(`${startupTime} Logged in as ${client.user.tag}!`);
-
-  // Store client id and secret in client object
-  client.id = require("./config.json").discat_client_id;
-  client.secret = require("./config.json").discat_client_secret;
 });
 
 client.on('message', msg => {
@@ -223,8 +223,8 @@ app.get("/auth", (req, res) => {
   var options = {
     url: "https://discordapp.com/api/oauth2/token",
     form: {
-      "client_id": client.id,
-      "client_secret": client.secret,
+      "client_id": clientId,
+      "client_secret": clientSecret,
       "grant_type": "authorization_code",
       "code": req.query.code,
       "redirect_uri": "https://www.discat.website/auth"
