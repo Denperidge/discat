@@ -81,6 +81,9 @@ function loadCommands(serverId) {
     var prefix = servers[0].prefix;  // Get the prefix used in that server
     var serverModules = servers[0].modules;  // Get the modules that server has installed
     var serverModuleNames = Object.keys(serverModules);  // Get the names of each module
+    console.log(prefix);
+    console.log(serverModules);
+    console.log(serverModuleNames);
 
     // Scroll through servers' modules
     for (var i = 0; i < serverModuleNames.length; i++) {
