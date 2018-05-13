@@ -115,6 +115,7 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
+  console.log("message");
   var guild; var reply;
   if (msg.author == client.user || commands[(guild = msg.guild.id)] == null) return;
   if ((reply = commands[guild][msg.content.toLowerCase()]) == null) return;
@@ -153,6 +154,7 @@ db.once("open", function () {
     loadDiscatServers();  // Load servers Discat is in
 
     // Load commands for each server Discat is in
+    console.log(client.joinedServers);
     for (var i = 0; i < client.joinedServers.length; i++) {
       loadCommands(client.joinedServers[i]);
       console.log(commands);
