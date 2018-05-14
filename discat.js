@@ -214,7 +214,7 @@ function exchangeToken(req, res, grantType){
       "Content-Type": "application/x-www-form-urlencoded"
     }
   }
-  
+
   if (grantType == "access_token") options.form.code = req.query.code;
   else options.form.refresh_token = req.session.refreshToken;
 
@@ -285,7 +285,7 @@ function checkIfUserLoggedIn(req, res) {
         if (user.message = "401: Unauthorized"){  // If the error is user not properly logged in
           if (req.session.refreshToken != undefined){  // Check for refresh token
             // If user has refreshtoken, use it to re-authorize the user
-            exchangeToken(req, res, "refres_token");
+            exchangeToken(req, res, "refresh_token");
           }
           else res.redirect("/login");  // If user doesn't have a refreshtoken, re-authenticate
         }
