@@ -242,6 +242,7 @@ app.get("/auth", (req, res) => {
 });
 
 app.get("/servers", (req, res) => {
+  checkIfUserLoggedIn();
   var options = {
     url: "https://discordapp.com/api/users/@me/guilds",
     headers: {
@@ -274,6 +275,10 @@ app.get("/servers", (req, res) => {
   });
 });
 
+function checkIfUserLoggedIn(){
+  if (req.session.accessToken == null) res.redirect("/login");
+}
+
 function checkIfUserOwnsDiscatServer(id, req, res, successCallback) {
   if (client.joinedServers.includes(id))  // Check if Discat is in the server
     if (req.session.ownedServers.includes(id))  // Check if user owns server
@@ -296,6 +301,7 @@ app.get("/server", (req, res) => {
 });
 
 app.get("/allmodules", (req, res) => {
+  checkIfUserLoggedIn();
   res.render("modules", {
     modules: websiteModules
   });
@@ -410,6 +416,7 @@ app.patch("/moduleserversettings", (req, res) => {
 });
 
 app.get("/user", (req, res) => {
+  checkIfUserLoggedIn();
   res.render("user", {
     modules: websiteModules.filter(websiteModule => (websiteModule.hasusersettings == true)),
     userModule: true
