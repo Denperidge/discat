@@ -125,7 +125,7 @@ client.on('guildDelete', guild => {
 });
 
 // Mongoose
-//mongoose.connect("mongodb://localhost/discat")
+mongoose.connect("mongodb://localhost/discat")
 var db = mongoose.connection;
 var dbServer;
 db.on("error", console.error.bind(console, "Error connecting to MongoDB!"));
