@@ -125,7 +125,7 @@ client.on('guildDelete', guild => {
 });
 
 // Mongoose
-mongoose.connect("mongodb://localhost/discat")
+//mongoose.connect("mongodb://localhost/discat")
 var db = mongoose.connection;
 var dbServer;
 db.on("error", console.error.bind(console, "Error connecting to MongoDB!"));
@@ -179,7 +179,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 518400000,  // 6 days. Every 5 days the tokens are refreshhed, so this is more than necessary
+    maxAge: 864000000,  // User stays logged in for 10 days
     //sameSite: true TODO sameSite and seure both cause errors
     secure: true
   }
@@ -187,30 +187,11 @@ app.use(session({
 
 app.get("/login", (req, res) => {
   if (req.session.accessToken != null) {  // If user is logged in
-    // Save the user ID in session
-    var options = {
-      url: "https://discordapp.com/api/users/@me",
-      headers: {
-        "Authorization": req.session.accessToken,
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    }
-  
-    request.get(options, (error, response, body) => {
-      var user = JSON.parse(body);
-  
-      req.session.user = {
-        id: user.id,
-        username: user.username,
-        discriminator: user.discriminator,
-        avatar: user.avatar
-      };
-    
-      res.redirect("/select");  // let him select server or user settings
-    });
+    checkIfUserLoggedIn(req, res);
+    res.redirect("/select");  // let him select server or user settings
   }  // If user isn't logged in
   else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /auth
-    "https://discordapp.com/api/oauth2/authorize?" + 
+    "https://discordapp.com/api/oauth2/authorize?" +
     "client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Fauth&response_type=code&scope=guilds%20identify");
 });
 
@@ -219,30 +200,39 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-app.get("/auth", (req, res) => {
+function exchangeToken(req, res, grantType){
   var options = {
     url: "https://discordapp.com/api/oauth2/token",
     form: {
       "client_id": clientId,
       "client_secret": clientSecret,
-      "grant_type": "authorization_code",
-      "code": req.query.code,
+      "grant_type": grantType,
+      // code or refresh_token will be added in if statement below
       "redirect_uri": "https://www.discat.website/auth"
     },
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     }
   }
+  
+  if (grantType == "access_token") options.form.code = req.query.code;
+  else options.form.refresh_token = req.session.refreshToken;
+
   request.post(options, (error, response, body) => {
     if (error) throw error;
     var token = JSON.parse(body);
     req.session.accessToken = token.token_type + " " + token.access_token;
+    req.session.refreshToken = token.refresh_token;
     res.redirect("/login");
   });
+}
+
+app.get("/auth", (req, res) => {
+  exchangeToken(req, res, "authorization_code");
 });
 
 app.get("/servers", (req, res) => {
-  checkIfUserLoggedIn();
+  checkIfUserLoggedIn(req, res);
   var options = {
     url: "https://discordapp.com/api/users/@me/guilds",
     headers: {
@@ -275,8 +265,40 @@ app.get("/servers", (req, res) => {
   });
 });
 
-function checkIfUserLoggedIn(){
+function checkIfUserLoggedIn(req, res) {
+  // If user has no accessToken, get one
   if (req.session.accessToken == null) res.redirect("/login");
+  else {
+    // Else check if accessToken works by requesting user data
+    var options = {
+      url: "https://discordapp.com/api/users/@me",
+      headers: {
+        "Authorization": req.session.accessToken,
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }
+
+    request.get(options, (error, response, body) => {
+      var user = JSON.parse(body);
+
+      if (user.message != undefined)  // If Discord returns a message, an error happened
+        if (user.message = "401: Unauthorized"){  // If the error is user not properly logged in
+          if (req.session.refreshToken != undefined){  // Check for refresh token
+            // If user has refreshtoken, use it to re-authorize the user
+            exchangeToken(req, res, "refres_token");
+          }
+          else res.redirect("/login");  // If user doesn't have a refreshtoken, re-authenticate
+        }
+
+      // Save user data in session
+      req.session.user = {
+        id: user.id,
+        username: user.username,
+        discriminator: user.discriminator,
+        avatar: user.avatar
+      };
+    });
+  }
 }
 
 function checkIfUserOwnsDiscatServer(id, req, res, successCallback) {
@@ -301,7 +323,7 @@ app.get("/server", (req, res) => {
 });
 
 app.get("/allmodules", (req, res) => {
-  checkIfUserLoggedIn();
+  checkIfUserLoggedIn(req, res);
   res.render("modules", {
     modules: websiteModules
   });
@@ -416,7 +438,7 @@ app.patch("/moduleserversettings", (req, res) => {
 });
 
 app.get("/user", (req, res) => {
-  checkIfUserLoggedIn();
+  checkIfUserLoggedIn(req, res);
   res.render("user", {
     modules: websiteModules.filter(websiteModule => (websiteModule.hasusersettings == true)),
     userModule: true
