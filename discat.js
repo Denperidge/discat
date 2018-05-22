@@ -285,9 +285,7 @@ function checkIfUserLoggedIn(req, res) {
         if (user.message = "401: Unauthorized") {  // If the error is user not properly logged in
           if (req.session.refreshToken != undefined) {  // Check for refresh token
             // If user has refreshtoken, use it to re-authorize the user
-            //exchangeToken(req, res, "refresh_token");
-            //return;
-            res.redirect("/auth");
+            exchangeToken(req, res, "refresh_token");
           }
           else res.redirect("/login");  // If user doesn't have a refreshtoken, re-authenticate
         }
