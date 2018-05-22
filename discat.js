@@ -495,95 +495,88 @@ app.post("/moduleupdate", (req, res) => {
       new Buffer(("sha1=" + crypto.createHmac("sha1", require("./config.json").discat_modules_repository_webhook_secret).update(JSON.stringify(req.body)).digest("hex"))))) {
       const spawn = require("child_process").spawn;  // Require the spawn function
 
-      console.log("Moving to discat-modules")
-      var moveToModules = spawn("cd", ["discat-modules"]);  // Pull the new update from github
-      moveToModules.on("exit", function () {  // Once the update has been pulled
-        console.log("Moved to discat-modules")
-        console.log("Pulling")
-        var pull = spawn("git", ["pull"]);  // Pull the new update from github
-        pull.on("exit", function () {  // Once the update has been pulled
-          console.log("Pulled")
-          var reloadModules = false;  // If a module has been added or modified, 
-          var modifiedModules = [];
 
-          function handleFileAdded(filename) {
-            if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
-            if (filename.endsWith("module.js")) reloadModules = true;
-            // If new module has been added, it doesn't need to be added anywhere, just reload website modules
-          }
+      console.log("Pulling")
+      var pull = spawn("git", ["pull"], {
+        cwd: __dirname + "/discat-modules"
+      });  // Pull the new update from github
+      pull.on("exit", function () {  // Once the update has been pulled
+        console.log("Pulled")
+        var reloadModules = false;  // If a module has been added or modified, 
+        var modifiedModules = [];
 
-          function handleFileModified(filename) {
-            if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
+        function handleFileAdded(filename) {
+          if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
+          if (filename.endsWith("module.js")) reloadModules = true;
+          // If new module has been added, it doesn't need to be added anywhere, just reload website modules
+        }
 
-            // If module code has been updated, remove and re-add it from every server, keeping settings that are valid
-            if (filename.endsWith(".js") || filename.endsWith(".json") || filename.endsWith(".pug")) {
-              reloadModules = true;  // If description update, reload website modules
+        function handleFileModified(filename) {
+          if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
 
-              var moduleName = filename.split("/")[1];  // Example: modules/ping/module.js => ping
+          // If module code has been updated, remove and re-add it from every server, keeping settings that are valid
+          if (filename.endsWith(".js") || filename.endsWith(".json") || filename.endsWith(".pug")) {
+            reloadModules = true;  // If description update, reload website modules
 
-              // There is no need to update the same module twice in the same commit, it would give no benefit at a performance cost
-              if (modifiedModules.indexOf(moduleName) < 0) return;  // If the module has already been updated in this commit, return
-              else modifiedModules.push(moduleName);  // Else, make sure that it doesn't get updated
+            var moduleName = filename.split("/")[1];  // Example: modules/ping/module.js => ping
 
-              // newSettings are the new keys that need to be defined, as well as the types that the settings currently entered should use
-              var newSettings = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + moduleName + "/config.json", "utf8")).serverdefaults;
-              // Modify module in each server
-              client.joinedServers.forEach((serverId) => {
-                modifyDbServer(serverId, (server) => {
-                  var serverModuleToModify = server.modules.filter(module => (module.name == moduleName))[0];
+            // There is no need to update the same module twice in the same commit, it would give no benefit at a performance cost
+            if (modifiedModules.indexOf(moduleName) < 0) return;  // If the module has already been updated in this commit, return
+            else modifiedModules.push(moduleName);  // Else, make sure that it doesn't get updated
 
-                  // Store old settings and replace them with the new ones
-                  var oldSettings = serverModuleToModify.settings;
-                  serverModuleToModify.settings = newSettings;
+            // newSettings are the new keys that need to be defined, as well as the types that the settings currently entered should use
+            var newSettings = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + moduleName + "/config.json", "utf8")).serverdefaults;
+            // Modify module in each server
+            client.joinedServers.forEach((serverId) => {
+              modifyDbServer(serverId, (server) => {
+                var serverModuleToModify = server.modules.filter(module => (module.name == moduleName))[0];
 
-                  // Save what you can from the old settings
-                  Object.keys(newSettings).forEach((settingKey) => {
-                    if (typeof serverModuleToModify[settingKey] == typeof oldSettings[settingKey])
-                      // If the previous setting is of the same type, re-use it
-                      serverModuleToModify[settingKey] = oldSettings[settingKey];
-                  });
+                // Store old settings and replace them with the new ones
+                var oldSettings = serverModuleToModify.settings;
+                serverModuleToModify.settings = newSettings;
 
-                  server.markModified("modules");  // Notify Mongoose that modules have changed
-                  server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
+                // Save what you can from the old settings
+                Object.keys(newSettings).forEach((settingKey) => {
+                  if (typeof serverModuleToModify[settingKey] == typeof oldSettings[settingKey])
+                    // If the previous setting is of the same type, re-use it
+                    serverModuleToModify[settingKey] = oldSettings[settingKey];
                 });
+
+                server.markModified("modules");  // Notify Mongoose that modules have changed
+                server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
               });
-            }
+            });
           }
+        }
 
-          function handleFileRemoved(filename) {
-            if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
+        function handleFileRemoved(filename) {
+          if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
 
-            // If module has been removed
-            if (filename.endsWith("module.js")) {
-              // Remove it from each server
-              var moduleName = filename.split("/")[1];  // Example: modules/ping/module.js => ping
-              client.joinedServers.forEach((serverId) => {
-                modifyDbServer(serverId, (server) => {
-                  // Remove module from server modules array
-                  var moduleToRemove = server.modules.filter(module => (module.name == moduleName))[0];
-                  server.modules.splice(server.modules.indexOf(moduleToRemove, 1));
-                  server.markModified("modules");  // Notify Mongoose that modules have changed
-                  server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
-                });
+          // If module has been removed
+          if (filename.endsWith("module.js")) {
+            // Remove it from each server
+            var moduleName = filename.split("/")[1];  // Example: modules/ping/module.js => ping
+            client.joinedServers.forEach((serverId) => {
+              modifyDbServer(serverId, (server) => {
+                // Remove module from server modules array
+                var moduleToRemove = server.modules.filter(module => (module.name == moduleName))[0];
+                server.modules.splice(server.modules.indexOf(moduleToRemove, 1));
+                server.markModified("modules");  // Notify Mongoose that modules have changed
+                server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
               });
-            }
+            });
           }
+        }
 
-          var commits = req.body.commits;
-          commits.forEach(commit => {
-            commit.added.forEach(handleFileAdded);
-            commit.modified.forEach(handleFileModified);
-            commit.removed.forEach(handleFileRemoved);
-          });
-
-          if (reloadModules) loadWebsiteModules();
-          console.log("Moving up")
-          var moveToDiscat = spawn("cd", [".."]);  // Move back to main directory
-          moveToDiscat.on("exit", function () {
-            console.log("Moved up")
-            res.sendStatus(200);
-          });
+        var commits = req.body.commits;
+        commits.forEach(commit => {
+          commit.added.forEach(handleFileAdded);
+          commit.modified.forEach(handleFileModified);
+          commit.removed.forEach(handleFileRemoved);
         });
+
+        if (reloadModules) loadWebsiteModules();
+        res.sendStatus(200);
       });
     }
     else throw "Authentication failed";
