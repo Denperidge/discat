@@ -499,6 +499,7 @@ app.post("/moduleupdate", (req, res) => {
         var pull = spawn("git", ["pull"]);  // Pull the new update from github
         pull.on("exit", function () {  // Once the update has been pulled
           var reloadModules = false;  // If a module has been added or modified, 
+          var modifiedModules = [];
 
           function handleFileAdded(filename) {
             if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
@@ -509,10 +510,38 @@ app.post("/moduleupdate", (req, res) => {
           function handleFileModified(filename) {
             if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
 
-            if (filename.endswith("config.json")) reloadModules = true;  // If description update, reload website modules
             // If module code has been updated, remove and re-add it from every server, keeping settings that are valid
-            else if (filename.endsWith(".js") || filename.endsWith(".json") || filename.endsWith(".pug")) {
-              // TODO
+            if (filename.endsWith(".js") || filename.endsWith(".json") || filename.endsWith(".pug")) {
+              reloadModules = true;  // If description update, reload website modules
+
+              var moduleName = filename.split("/")[1];  // Example: modules/ping/module.js => ping
+
+              // There is no need to update the same module twice in the same commit, it would give no benefit at a performance cost
+              if (modifiedModules.indexOf(moduleName) < 0) return;  // If the module has already been updated in this commit, return
+              else modifiedModules.push(moduleName);  // Else, make sure that it doesn't get updated
+
+              // newSettings are the new keys that need to be defined, as well as the types that the settings currently entered should use
+              var newSettings = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + moduleName + "/config.json", "utf8")).serverdefaults;
+              // Modify module in each server
+              client.joinedServers.forEach((serverId) => {
+                modifyDbServer(serverId, (server) => {
+                  var serverModuleToModify = server.modules.filter(module => (module.name == moduleName))[0];
+
+                  // Store old settings and replace them with the new ones
+                  var oldSettings = serverModuleToModify.settings;
+                  serverModuleToModify.settings = newSettings;
+
+                  // Save what you can from the old settings
+                  Object.keys(newSettings).forEach((settingKey) => {
+                    if (typeof serverModuleToModify[settingKey] == typeof oldSettings[settingKey])
+                      // If the previous setting is of the same type, re-use it
+                      serverModuleToModify[settingKey] = oldSettings[settingKey];
+                  });
+
+                  server.markModified("modules");  // Notify Mongoose that modules have changed
+                  server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
+                });
+              });
             }
           }
 
@@ -522,7 +551,7 @@ app.post("/moduleupdate", (req, res) => {
             // If module has been removed
             if (filename.endsWith("module.js")) {
               // Remove it from each server
-              var moduleName = filename.split("/")[1];  // Filename example: modules/ping/module.js
+              var moduleName = filename.split("/")[1];  // Example: modules/ping/module.js => ping
               client.joinedServers.forEach((serverId) => {
                 modifyDbServer(serverId, (server) => {
                   // Remove module from server modules array
