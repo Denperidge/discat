@@ -522,7 +522,16 @@ app.post("/moduleupdate", (req, res) => {
             // If module has been removed
             if (filename.endsWith("module.js")) {
               // Remove it from each server
-              // TODO
+              var moduleName = filename.split("/")[1];  // Filename example: modules/ping/module.js
+              client.joinedServers.forEach((serverId) => {
+                modifyDbServer(serverId, (server) => {
+                  // Remove module from server modules array
+                  var moduleToRemove = server.modules.filter(module => (module.name == moduleName))[0];
+                  server.modules.splice(server.modules.indexOf(moduleToRemove, 1));
+                  server.markModified("modules");  // Notify Mongoose that modules have changed
+                  server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
+                });
+              });
             }
           }
 
