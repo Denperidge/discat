@@ -586,7 +586,8 @@ app.post("/moduleupdate", (req, res) => {
     else throw "Authentication failed";
   } catch (e) {
     console.log(e);
-    res.send("Post failed!")
+    res.status(400);
+    res.send("Post failed!");
   }
 });
 
