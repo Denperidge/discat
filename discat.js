@@ -484,8 +484,7 @@ app.post("/discatupdate", function (req, res) {
 
 app.post("/moduleupdate", (req, res) => {
   console.log(req);
-  console.log(req.body);
-  var body = JSON.parse(req.body);
+  var body = req.body;
 
   if (body.ref != "refs/heads/master") return;
 
