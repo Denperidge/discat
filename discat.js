@@ -523,6 +523,9 @@ app.post("/moduleupdate", (req, res) => {
 
             console.log(modifiedModules);
 
+            console.log(moduleName);
+            console.log(modifiedModules.indexOf(moduleName));
+
             // There is no need to update the same module twice in the same commit, it would give no benefit at a performance cost
             if (modifiedModules.indexOf(moduleName) < 0) return;  // If the module has already been updated in this commit, return
             else modifiedModules.push(moduleName);  // Else, make sure that it doesn't get updated
