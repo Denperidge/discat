@@ -485,6 +485,7 @@ app.post("/discatupdate", function (req, res) {
 app.post("/moduleupdate", (req, res) => {
   var body = req.body;
 
+  console.log(body.ref);
   if (body.ref != "refs/heads/master") {
     res.sendStatus(200);  // Return 200 even if commit wasn't meant for module update
     return;
