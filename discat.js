@@ -535,8 +535,14 @@ app.post("/moduleupdate", (req, res) => {
                 var oldSettings = serverModuleToModify.settings;
                 serverModuleToModify.settings = newSettings;
 
+                console.log(oldSettings);
+                console.log(newSettings);
+
+                
+
                 // Save what you can from the old settings
                 Object.keys(newSettings).forEach((settingKey) => {
+                  console.log(typeof serverModuleToModify[settingKey] +" " + typeof oldSettings[settingKey]);
                   if (typeof serverModuleToModify[settingKey] == typeof oldSettings[settingKey])
                     // If the previous setting is of the same type, re-use it
                     serverModuleToModify[settingKey] = oldSettings[settingKey];
@@ -569,6 +575,7 @@ app.post("/moduleupdate", (req, res) => {
         }
 
         var commits = req.body.commits;
+        console.log(commits);
         commits.forEach(commit => {
           commit.added.forEach(handleFileAdded);
           commit.modified.forEach(handleFileModified);
