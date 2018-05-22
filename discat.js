@@ -553,8 +553,8 @@ app.post("/moduleupdate", (req, res) => {
 
                 // Save what you can from the old settings
                 Object.keys(newSettings).forEach((settingKey) => {
-                  console.log(typeof serverModuleToModify.setings[settingKey] +" " + typeof oldSettings[settingKey]);
-                  if (typeof serverModuleToModify.setings[settingKey] == typeof oldSettings[settingKey])
+                  console.log(typeof serverModuleToModify.settings[settingKey] +" " + typeof oldSettings[settingKey]);
+                  if (typeof serverModuleToModify.settings[settingKey] == typeof oldSettings[settingKey])
                     // If the previous setting is of the same type, re-use it
                     serverModuleToModify[settingKey] = oldSettings[settingKey];
                 });
