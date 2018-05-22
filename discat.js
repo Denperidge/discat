@@ -534,6 +534,7 @@ app.post("/moduleupdate", (req, res) => {
           });
 
           if (reloadModules) loadWebsiteModules();
+          res.sendStatus(200);
         });
       });
     }
