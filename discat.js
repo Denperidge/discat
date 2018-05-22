@@ -200,7 +200,7 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-function exchangeToken(req, res, grantType){
+function exchangeToken(req, res, grantType) {
   var options = {
     url: "https://discordapp.com/api/oauth2/token",
     form: {
@@ -282,8 +282,8 @@ function checkIfUserLoggedIn(req, res) {
       var user = JSON.parse(body);
 
       if (user.message != undefined)  // If Discord returns a message, an error happened
-        if (user.message = "401: Unauthorized"){  // If the error is user not properly logged in
-          if (req.session.refreshToken != undefined){  // Check for refresh token
+        if (user.message = "401: Unauthorized") {  // If the error is user not properly logged in
+          if (req.session.refreshToken != undefined) {  // Check for refresh token
             // If user has refreshtoken, use it to re-authorize the user
             exchangeToken(req, res, "refresh_token");
           }
@@ -480,6 +480,68 @@ app.post("/discatupdate", function (req, res) {
     res.send("Post failed!")
   }
   // req.body.ref == refs/heads/master 
+});
+
+app.post("/moduleupdate", (req, res) => {
+  var body = JSON.parse(req.body);
+
+  if (body.ref != "refs/heads/master") return;
+
+  try {
+    const crypto = require("crypto");
+    if (crypto.timingSafeEqual(
+      new Buffer(req.headers["x-hub-signature"]),
+      new Buffer(("sha1=" + crypto.createHmac("sha1", require("./config.json").discat_modules_repository_webhook_secret).update(JSON.stringify(req.body)).digest("hex"))))) {
+      const spawn = require("child_process").spawn;  // Require the spawn function
+
+      var moveToModules = spawn("cd", ["discat-modules"]);  // Pull the new update from github
+      moveToModules.on("exit", function () {  // Once the update has been pulled
+        var pull = spawn("git", ["pull"]);  // Pull the new update from github
+        pull.on("exit", function () {  // Once the update has been pulled
+          var reloadModules = false;  // If a module has been added or modified, 
+
+          function handleFileAdded(filename) {
+            if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
+            if (filename.endsWith("module.js")) reloadModules = true;
+            // If new module has been added, it doesn't need to be added anywhere, just reload website modules
+          }
+
+          function handleFileModified(filename) {
+            if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
+
+            if (filename.endswith("config.json")) reloadModules = true;  // If description update, reload website modules
+            // If module code has been updated, remove and re-add it from every server, keeping settings that are valid
+            else if (filename.endsWith(".js") || filename.endsWith(".json") || filename.endsWith(".pug")) {
+              // TODO
+            }
+          }
+
+          function handleFileRemoved(filename) {
+            if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
+
+            // If module has been removed
+            if (filename.endsWith("module.js")) {
+              // Remove it from each server
+              // TODO
+            }
+          }
+
+          var commits = body.commits;
+          commits.forEach(commit => {
+            commit.added.forEach(handleFileAdded);
+            commit.modified.forEach(handleFileModified);
+            commit.removed.forEach(handleFileRemoved);
+          });
+
+          if (reloadModules) loadWebsiteModules();
+        });
+      });
+    }
+    else throw "Authentication failed";
+  } catch (e) {
+    console.log(e);
+    res.send("Post failed!")
+  }
 });
 
 app.listen(3000, () => {
