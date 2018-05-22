@@ -512,6 +512,7 @@ app.post("/moduleupdate", (req, res) => {
         }
 
         function handleFileModified(filename) {
+          console.log(filename);
           if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
 
           // If module code has been updated, remove and re-add it from every server, keeping settings that are valid
@@ -520,14 +521,19 @@ app.post("/moduleupdate", (req, res) => {
 
             var moduleName = filename.split("/")[1];  // Example: modules/ping/module.js => ping
 
+            console.log(modifiedModules);
+
             // There is no need to update the same module twice in the same commit, it would give no benefit at a performance cost
             if (modifiedModules.indexOf(moduleName) < 0) return;  // If the module has already been updated in this commit, return
             else modifiedModules.push(moduleName);  // Else, make sure that it doesn't get updated
+
+            console.log(modifiedModules);
 
             // newSettings are the new keys that need to be defined, as well as the types that the settings currently entered should use
             var newSettings = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + moduleName + "/config.json", "utf8")).serverdefaults;
             // Modify module in each server
             client.joinedServers.forEach((serverId) => {
+              console.log(serverId);
               modifyDbServer(serverId, (server) => {
                 var serverModuleToModify = server.modules.filter(module => (module.name == moduleName))[0];
 
@@ -575,8 +581,8 @@ app.post("/moduleupdate", (req, res) => {
         }
 
         var commits = req.body.commits;
-        console.log(commits);
         commits.forEach(commit => {
+          console.log(commit.modified);
           commit.added.forEach(handleFileAdded);
           commit.modified.forEach(handleFileModified);
           commit.removed.forEach(handleFileRemoved);
