@@ -483,10 +483,12 @@ app.post("/discatupdate", function (req, res) {
 });
 
 app.post("/moduleupdate", (req, res) => {
-  console.log(req);
   var body = req.body;
 
-  if (body.ref != "refs/heads/master") return;
+  if (body.ref != "refs/heads/master") {
+    res.sendStatus(200);  // Return 200 even if commit wasn't meant for module update
+    return;
+  }
 
   try {
     const crypto = require("crypto");
@@ -497,7 +499,6 @@ app.post("/moduleupdate", (req, res) => {
 
       var moveToModules = spawn("cd", ["discat-modules"]);  // Pull the new update from github
       moveToModules.on("exit", function () {  // Once the update has been pulled
-        console.log("Moved to modules!")
         var pull = spawn("git", ["pull"]);  // Pull the new update from github
         pull.on("exit", function () {  // Once the update has been pulled
           var reloadModules = false;  // If a module has been added or modified, 
