@@ -497,6 +497,7 @@ app.post("/moduleupdate", (req, res) => {
 
       var moveToModules = spawn("cd", ["discat-modules"]);  // Pull the new update from github
       moveToModules.on("exit", function () {  // Once the update has been pulled
+        console.log("Moved to modules!")
         var pull = spawn("git", ["pull"]);  // Pull the new update from github
         pull.on("exit", function () {  // Once the update has been pulled
           var reloadModules = false;  // If a module has been added or modified, 
@@ -573,7 +574,10 @@ app.post("/moduleupdate", (req, res) => {
           });
 
           if (reloadModules) loadWebsiteModules();
-          res.sendStatus(200);
+          var moveToDiscat = spawn("cd", [".."]);  // Move back to main directory
+          moveToDiscat.on("exit", function () {
+            res.sendStatus(200);
+          });
         });
       });
     }
