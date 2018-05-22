@@ -556,7 +556,7 @@ app.post("/moduleupdate", (req, res) => {
                   console.log(typeof serverModuleToModify.settings[settingKey] +" " + typeof oldSettings[settingKey]);
                   if (typeof serverModuleToModify.settings[settingKey] == typeof oldSettings[settingKey])
                     // If the previous setting is of the same type, re-use it
-                    serverModuleToModify[settingKey] = oldSettings[settingKey];
+                    serverModuleToModify.settings[settingKey] = oldSettings[settingKey];
                 });
 
                 server.markModified("modules");  // Notify Mongoose that modules have changed
