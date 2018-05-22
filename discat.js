@@ -502,6 +502,8 @@ app.post("/moduleupdate", (req, res) => {
       });  // Pull the new update from github
       pull.on("exit", function () {  // Once the update has been pulled
         console.log("Pulled")
+        const fs = require("fs");
+
         var reloadModules = false;  // If a module has been added or modified, 
         var modifiedModules = [];
 
