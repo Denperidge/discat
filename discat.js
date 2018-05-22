@@ -495,10 +495,14 @@ app.post("/moduleupdate", (req, res) => {
       new Buffer(("sha1=" + crypto.createHmac("sha1", require("./config.json").discat_modules_repository_webhook_secret).update(JSON.stringify(req.body)).digest("hex"))))) {
       const spawn = require("child_process").spawn;  // Require the spawn function
 
+      console.log("Moving to discat-modules")
       var moveToModules = spawn("cd", ["discat-modules"]);  // Pull the new update from github
       moveToModules.on("exit", function () {  // Once the update has been pulled
+        console.log("Moved to discat-modules")
+        console.log("Pulling")
         var pull = spawn("git", ["pull"]);  // Pull the new update from github
         pull.on("exit", function () {  // Once the update has been pulled
+          console.log("Pulled")
           var reloadModules = false;  // If a module has been added or modified, 
           var modifiedModules = [];
 
@@ -573,8 +577,10 @@ app.post("/moduleupdate", (req, res) => {
           });
 
           if (reloadModules) loadWebsiteModules();
+          console.log("Moving up")
           var moveToDiscat = spawn("cd", [".."]);  // Move back to main directory
           moveToDiscat.on("exit", function () {
+            console.log("Moved up")
             res.sendStatus(200);
           });
         });
