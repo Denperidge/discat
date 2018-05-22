@@ -560,7 +560,7 @@ app.post("/moduleupdate", (req, res) => {
                 });
 
                 server.markModified("modules");  // Notify Mongoose that modules have changed
-                server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
+                server.save((err, server) => { if (err) throw err; loadCommands(serverId); });
               });
             });
           }
@@ -579,7 +579,7 @@ app.post("/moduleupdate", (req, res) => {
                 var moduleToRemove = server.modules.filter(module => (module.name == moduleName))[0];
                 server.modules.splice(server.modules.indexOf(moduleToRemove, 1));
                 server.markModified("modules");  // Notify Mongoose that modules have changed
-                server.save((err, server) => { if (err) throw err; res.sendStatus(200); loadCommands(serverId); });
+                server.save((err, server) => { if (err) throw err; loadCommands(serverId); });
               });
             });
           }
