@@ -187,7 +187,7 @@ app.use(session({
 
 app.get("/login", (req, res) => {
   if (req.session.accessToken != null) {  // If user is logged in
-    checkIfUserLoggedIn(req, res);
+    if (!checkIfUserLoggedIn(req, res)) return;
     res.redirect("/select");  // let him select server or user settings
   }  // If user isn't logged in
   else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /auth
@@ -232,7 +232,7 @@ app.get("/auth", (req, res) => {
 });
 
 app.get("/servers", (req, res) => {
-  checkIfUserLoggedIn(req, res);
+  if (!checkIfUserLoggedIn(req, res)) return;
   var options = {
     url: "https://discordapp.com/api/users/@me/guilds",
     headers: {
@@ -281,14 +281,16 @@ function checkIfUserLoggedIn(req, res) {
     request.get(options, (error, response, body) => {
       var user = JSON.parse(body);
 
-      if (user.message != undefined)  // If Discord returns a message, an error happened
+      if (user.message != undefined){  // If Discord returns a message, an error happened
         if (user.message = "401: Unauthorized") {  // If the error is user not properly logged in
           if (req.session.refreshToken != undefined) {  // Check for refresh token
             // If user has refreshtoken, use it to re-authorize the user
             exchangeToken(req, res, "refresh_token");
+            return false;
           }
-          else res.redirect("/login");  // If user doesn't have a refreshtoken, re-authenticate
+          else { res.redirect("/login"); return false; }  // If user doesn't have a refreshtoken, re-authenticate
         }
+      }
 
       // Save user data in session
       req.session.user = {
@@ -297,6 +299,7 @@ function checkIfUserLoggedIn(req, res) {
         discriminator: user.discriminator,
         avatar: user.avatar
       };
+      return true;
     });
   }
 }
@@ -323,7 +326,8 @@ app.get("/server", (req, res) => {
 });
 
 app.get("/allmodules", (req, res) => {
-  checkIfUserLoggedIn(req, res);
+  if (!checkIfUserLoggedIn(req, res)) return;
+  console.log("e");
   res.render("modules", {
     modules: websiteModules
   });
@@ -438,7 +442,7 @@ app.patch("/moduleserversettings", (req, res) => {
 });
 
 app.get("/user", (req, res) => {
-  checkIfUserLoggedIn(req, res);
+  if (!checkIfUserLoggedIn(req, res)) return;
   res.render("user", {
     modules: websiteModules.filter(websiteModule => (websiteModule.hasusersettings == true)),
     userModule: true
