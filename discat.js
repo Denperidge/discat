@@ -190,9 +190,11 @@ app.get("/login", (req, res) => {
     if (!checkIfUserLoggedIn(req, res)) return;
     res.redirect("/select");  // let him select server or user settings
   }  // If user isn't logged in
-  else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /auth
+  // If a code is passed to exchange for access token, exchange it
+  else if (req.query.code != undefined) exchangeToken(req, res, "authorization_code");
+  else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /login
     "https://discordapp.com/api/oauth2/authorize?" +
-    "client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Fauth&response_type=code&scope=guilds%20identify");
+    "client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Flogin&response_type=code&scope=guilds%20identify");
 });
 
 app.get("/logout", (req, res) => {
@@ -208,7 +210,7 @@ function exchangeToken(req, res, grantType) {
       "client_secret": clientSecret,
       "grant_type": grantType,
       // code or refresh_token will be added in if statement below
-      "redirect_uri": "https://www.discat.website/auth"
+      "redirect_uri": "https://www.discat.website/login"
     },
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
@@ -226,10 +228,6 @@ function exchangeToken(req, res, grantType) {
     res.redirect("/login");
   });
 }
-
-app.get("/auth", (req, res) => {
-  exchangeToken(req, res, "authorization_code");
-});
 
 app.get("/servers", (req, res) => {
   if (!checkIfUserLoggedIn(req, res)) return;
