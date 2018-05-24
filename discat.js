@@ -281,6 +281,7 @@ function checkIfUserLoggedIn(req, res) {
       var user = JSON.parse(body);
 
       if (user.message != undefined){  // If Discord returns a message, an error happened
+        console.log(user.message);
         if (user.message = "401: Unauthorized") {  // If the error is user not properly logged in
           if (req.session.refreshToken != undefined) {  // Check for refresh token
             // If user has refreshtoken, use it to re-authorize the user
