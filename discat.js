@@ -186,11 +186,11 @@ app.use(session({
 }));
 
 app.get("/login", (req, res) => {
-  if (checkIfUserLoggedIn(req, res)) {  // If user is logged in
+  // If a code is passed to exchange for access token, exchange it before checkIfUserLoggedIn attempts to use it
+  if (req.query.code != undefined) exchangeToken(req, res, "authorization_code");
+  else if (checkIfUserLoggedIn(req, res)) {  // If user is logged in
     res.redirect("/select");  // let him select server or user settings
   }  // If user isn't logged in
-  // If a code is passed to exchange for access token, exchange it
-  else if (req.query.code != undefined) exchangeToken(req, res, "authorization_code");
   else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /login
     "https://discordapp.com/api/oauth2/authorize?" +
     "client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Flogin&response_type=code&scope=guilds%20identify");
