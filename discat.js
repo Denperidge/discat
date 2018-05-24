@@ -265,8 +265,9 @@ app.get("/servers", (req, res) => {
 
 function checkIfUserLoggedIn(req, res) {
   // If user has no accessToken, get one
-  if (req.session.accessToken == null) res.redirect("/login");
-  else {
+  //if (req.session.accessToken == null) res.redirect("/login");
+  //else 
+  {
     // Else check if accessToken works by requesting user data
     var options = {
       url: "https://discordapp.com/api/users/@me",
