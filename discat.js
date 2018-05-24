@@ -186,8 +186,7 @@ app.use(session({
 }));
 
 app.get("/login", (req, res) => {
-  if (req.session.accessToken != null) {  // If user is logged in
-    if (!checkIfUserLoggedIn(req, res)) return;
+  if (checkIfUserLoggedIn(req, res)) {  // If user is logged in
     res.redirect("/select");  // let him select server or user settings
   }  // If user isn't logged in
   // If a code is passed to exchange for access token, exchange it
