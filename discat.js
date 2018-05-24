@@ -225,7 +225,7 @@ function exchangeToken(req, res, grantType) {
     var token = JSON.parse(body);
     req.session.accessToken = token.token_type + " " + token.access_token;
     req.session.refreshToken = token.refresh_token;
-    res.redirect("/select");
+    res.redirect("back");
   });
 }
 
@@ -265,8 +265,8 @@ app.get("/servers", (req, res) => {
 
 function checkIfUserLoggedIn(req, res) {
   // If user has no accessToken, get one
-  //if (req.session.accessToken == null) res.redirect("/login");
-  //else 
+  if (req.session.accessToken == null) res.redirect("/login");
+  else 
   {
     // Else check if accessToken works by requesting user data
     var options = {
@@ -288,7 +288,7 @@ function checkIfUserLoggedIn(req, res) {
             exchangeToken(req, res, "refresh_token");
             return false;
           }
-          //else { res.redirect("/login"); return false; }  // If user doesn't have a refreshtoken, re-authenticate
+          else { res.redirect("/login"); return false; }  // If user doesn't have a refreshtoken, re-authenticate
         }
       }
 
