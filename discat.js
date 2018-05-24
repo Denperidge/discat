@@ -287,7 +287,7 @@ function checkIfUserLoggedIn(req, res) {
             exchangeToken(req, res, "refresh_token");
             return false;
           }
-          else { res.redirect("/login"); return false; }  // If user doesn't have a refreshtoken, re-authenticate
+          //else { res.redirect("/login"); return false; }  // If user doesn't have a refreshtoken, re-authenticate
         }
       }
 
