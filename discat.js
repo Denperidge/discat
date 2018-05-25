@@ -225,7 +225,7 @@ function exchangeToken(req, res, grantType) {
     var token = JSON.parse(body);
     req.session.accessToken = token.token_type + " " + token.access_token;
     req.session.refreshToken = token.refresh_token;
-    res.redirect("back");
+    res.redirect("/login");
   });
 }
 
