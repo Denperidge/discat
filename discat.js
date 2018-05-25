@@ -189,6 +189,7 @@ app.get("/login", (req, res) => {
   // If a code is passed to exchange for access token, exchange it before checkIfUserLoggedIn attempts to use it
   if (req.query.code != undefined) exchangeToken(req, res, "authorization_code");
   else if (req.session.accessToken != null) {  // If user is logged in
+    console.log("Checkig if user logged in")
     if (checkIfUserLoggedIn(req, res)){  // Check if valid login
       console.log("Redirecting...")
       res.redirect("/select");  // let him select server or user settings
