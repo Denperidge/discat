@@ -217,7 +217,7 @@ function exchangeToken(req, res, grantType) {
     }
   }
 
-  if (grantType == "access_token") options.form.code = req.query.code;
+  if (grantType == "authorization_code") options.form.code = req.query.code;
   else options.form.refresh_token = req.session.refreshToken;
 
   request.post(options, (error, response, body) => {
