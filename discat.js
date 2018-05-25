@@ -276,7 +276,7 @@ function checkIfUserLoggedIn(req, res) {
         "Content-Type": "application/x-www-form-urlencoded"
       }
     }
-
+    console.log("Sending request!");
     request.get(options, (error, response, body) => {
       var user = JSON.parse(body);
 
@@ -292,6 +292,8 @@ function checkIfUserLoggedIn(req, res) {
         }
       }
 
+      console.log ("Saving session");
+
       // Save user data in session
       req.session.user = {
         id: user.id,
@@ -299,6 +301,8 @@ function checkIfUserLoggedIn(req, res) {
         discriminator: user.discriminator,
         avatar: user.avatar
       };
+
+      console.log("Session saved")
       return true;
     });
   }
