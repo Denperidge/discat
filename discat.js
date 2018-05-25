@@ -186,15 +186,12 @@ app.use(session({
 }));
 
 app.get("/login", (req, res) => {
-  // If a code is passed to exchange for access token, exchange it before checkIfUserLoggedIn attempts to use it
+  // If a code is passed to exchange for access token, exchange it before ifUserLoggedIn attempts to use it
   if (req.query.code != undefined) exchangeToken(req, res, "authorization_code");
   else if (req.session.accessToken != null) {  // If user is logged in
-    console.log("Checkig if user logged in")
-    if (checkIfUserLoggedIn(req, res)){  // Check if valid login
-      console.log("Redirecting...")
+    ifUserLoggedIn(req, res, () => {
       res.redirect("/select");  // let him select server or user settings
-      console.log("Redirected");
-    }
+    });
   }  // If user isn't logged in
   else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /login
     "https://discordapp.com/api/oauth2/authorize?" +
@@ -234,44 +231,44 @@ function exchangeToken(req, res, grantType) {
 }
 
 app.get("/servers", (req, res) => {
-  if (!checkIfUserLoggedIn(req, res)) return;
-  var options = {
-    url: "https://discordapp.com/api/users/@me/guilds",
-    headers: {
-      "Authorization": req.session.accessToken,
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
-  }
-
-  request.get(options, (error, response, body) => {
-    var allServers = JSON.parse(body);
-    var ownedServers = [];
-    var serversToPush = [];
-    for (var i = 0; i < allServers.length; i++) {
-      var server = allServers[i];
-      if (server.owner == true && client.joinedServers.includes(server.id)) {
-        ownedServers.push(server.id);  // Owned server with just id, to be stored in session
-        serversToPush.push({  // Owned servers with name/icon, to push to /servers
-          id: server.id,
-          name: server.name,
-          icon: server.icon
-        });
+  ifUserLoggedIn(req, res, () => {
+    var options = {
+      url: "https://discordapp.com/api/users/@me/guilds",
+      headers: {
+        "Authorization": req.session.accessToken,
+        "Content-Type": "application/x-www-form-urlencoded"
       }
     }
 
-    req.session.ownedServers = ownedServers;
+    request.get(options, (error, response, body) => {
+      var allServers = JSON.parse(body);
+      var ownedServers = [];
+      var serversToPush = [];
+      for (var i = 0; i < allServers.length; i++) {
+        var server = allServers[i];
+        if (server.owner == true && client.joinedServers.includes(server.id)) {
+          ownedServers.push(server.id);  // Owned server with just id, to be stored in session
+          serversToPush.push({  // Owned servers with name/icon, to push to /servers
+            id: server.id,
+            name: server.name,
+            icon: server.icon
+          });
+        }
+      }
 
-    res.render("servers", {
-      servers: serversToPush
+      req.session.ownedServers = ownedServers;
+
+      res.render("servers", {
+        servers: serversToPush
+      });
     });
   });
 });
 
-function checkIfUserLoggedIn(req, res) {
+function ifUserLoggedIn(req, res, callback) {
   // If user has no accessToken, get one
   if (req.session.accessToken == null) res.redirect("/login");
-  else 
-  {
+  else {
     // Else check if accessToken works by requesting user data
     var options = {
       url: "https://discordapp.com/api/users/@me",
@@ -280,23 +277,18 @@ function checkIfUserLoggedIn(req, res) {
         "Content-Type": "application/x-www-form-urlencoded"
       }
     }
-    console.log("Sending request!");
     request.get(options, (error, response, body) => {
       var user = JSON.parse(body);
 
-      if (user.message != undefined){  // If Discord returns a message, an error happened
-        console.log(user.message);
+      if (user.message != undefined) {  // If Discord returns a message, an error happened
         if (user.message = "401: Unauthorized") {  // If the error is user not properly logged in
           if (req.session.refreshToken != undefined) {  // Check for refresh token
             // If user has refreshtoken, use it to re-authorize the user
             exchangeToken(req, res, "refresh_token");
-            return false;
           }
-          else { res.redirect("/login"); return false; }  // If user doesn't have a refreshtoken, re-authenticate
+          else { res.redirect("/login"); }  // If user doesn't have a refreshtoken, re-authenticate
         }
       }
-
-      console.log ("Saving session");
 
       // Save user data in session
       req.session.user = {
@@ -305,9 +297,7 @@ function checkIfUserLoggedIn(req, res) {
         discriminator: user.discriminator,
         avatar: user.avatar
       };
-
-      console.log("Session saved")
-      return true;
+      callback();
     });
   }
 }
@@ -334,11 +324,11 @@ app.get("/server", (req, res) => {
 });
 
 app.get("/allmodules", (req, res) => {
-  if (!checkIfUserLoggedIn(req, res)) return;
-  console.log("e");
-  res.render("modules", {
-    modules: websiteModules
-  });
+  if (!ifUserLoggedIn(req, res, () => {
+    res.render("modules", {
+      modules: websiteModules
+    });
+  }));
 });
 
 app.patch("/saveserversettings", (req, res) => {
@@ -450,11 +440,12 @@ app.patch("/moduleserversettings", (req, res) => {
 });
 
 app.get("/user", (req, res) => {
-  if (!checkIfUserLoggedIn(req, res)) return;
-  res.render("user", {
-    modules: websiteModules.filter(websiteModule => (websiteModule.hasusersettings == true)),
-    userModule: true
-  });
+  if (ifUserLoggedIn(req, res, () => {
+    res.render("user", {
+      modules: websiteModules.filter(websiteModule => (websiteModule.hasusersettings == true)),
+      userModule: true
+    });
+  }));
 });
 
 // App
@@ -561,11 +552,11 @@ app.post("/moduleupdate", (req, res) => {
                 console.log(oldSettings);
                 console.log(newSettings);
 
-                
+
 
                 // Save what you can from the old settings
                 Object.keys(newSettings).forEach((settingKey) => {
-                  console.log(typeof serverModuleToModify.settings[settingKey] +" " + typeof oldSettings[settingKey]);
+                  console.log(typeof serverModuleToModify.settings[settingKey] + " " + typeof oldSettings[settingKey]);
                   if (typeof serverModuleToModify.settings[settingKey] == typeof oldSettings[settingKey])
                     // If the previous setting is of the same type, re-use it
                     serverModuleToModify.settings[settingKey] = oldSettings[settingKey];
