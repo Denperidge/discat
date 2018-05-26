@@ -498,13 +498,10 @@ app.post("/moduleupdate", (req, res) => {
       new Buffer(("sha1=" + crypto.createHmac("sha1", require("./config.json").discat_modules_repository_webhook_secret).update(JSON.stringify(req.body)).digest("hex"))))) {
       const spawn = require("child_process").spawn;  // Require the spawn function
 
-
-      console.log("Pulling")
       var pull = spawn("git", ["pull"], {
         cwd: __dirname + "/discat-modules"
       });  // Pull the new update from github
       pull.on("exit", function () {  // Once the update has been pulled
-        console.log("Pulled")
         const fs = require("fs");
 
         var reloadModules = false;  // If a module has been added or modified, 
@@ -517,7 +514,6 @@ app.post("/moduleupdate", (req, res) => {
         }
 
         function handleFileModified(filename) {
-          console.log(filename);
           if (!filename.startsWith("modules/")) return;  // If not a module update, don't handle
 
           // If module code has been updated, remove and re-add it from every server, keeping settings that are valid
@@ -526,22 +522,14 @@ app.post("/moduleupdate", (req, res) => {
 
             var moduleName = filename.split("/")[1];  // Example: modules/ping/module.js => ping
 
-            console.log(modifiedModules);
-
-            console.log(moduleName);
-            console.log(modifiedModules.indexOf(moduleName));
-
             // There is no need to update the same module twice in the same commit, it would give no benefit at a performance cost
             if (modifiedModules.indexOf(moduleName) >= 0) return;  // If the module has already been updated in this commit, return
             else modifiedModules.push(moduleName);  // Else, make sure that it doesn't get updated
-
-            console.log(modifiedModules);
 
             // newSettings are the new keys that need to be defined, as well as the types that the settings currently entered should use
             var newSettings = JSON.parse(fs.readFileSync(__dirname + "/discat-modules/modules/" + moduleName + "/config.json", "utf8")).serverdefaults;
             // Modify module in each server
             client.joinedServers.forEach((serverId) => {
-              console.log(serverId);
               modifyDbServer(serverId, (server) => {
                 var serverModuleToModify = server.modules.filter(module => (module.name == moduleName))[0];
 
@@ -549,14 +537,9 @@ app.post("/moduleupdate", (req, res) => {
                 var oldSettings = serverModuleToModify.settings;
                 serverModuleToModify.settings = newSettings;
 
-                console.log(oldSettings);
-                console.log(newSettings);
-
-
 
                 // Save what you can from the old settings
                 Object.keys(newSettings).forEach((settingKey) => {
-                  console.log(typeof serverModuleToModify.settings[settingKey] + " " + typeof oldSettings[settingKey]);
                   if (typeof serverModuleToModify.settings[settingKey] == typeof oldSettings[settingKey])
                     // If the previous setting is of the same type, re-use it
                     serverModuleToModify.settings[settingKey] = oldSettings[settingKey];
@@ -590,7 +573,6 @@ app.post("/moduleupdate", (req, res) => {
 
         var commits = req.body.commits;
         commits.forEach(commit => {
-          console.log(commit.modified);
           commit.added.forEach(handleFileAdded);
           commit.modified.forEach(handleFileModified);
           commit.removed.forEach(handleFileRemoved);
