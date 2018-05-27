@@ -351,6 +351,7 @@ app.patch("/saveserversettings", (req, res) => {
 });
 
 app.post("/addmodule", (req, res) => {
+  console.log(req);
   var serverId = req.body.Discord_Server_Id;
   // Check if user is authorized to access server settings
   checkIfUserOwnsDiscatServer(serverId, req, res, function () {
