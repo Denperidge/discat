@@ -340,6 +340,8 @@ app.get("/login", (req, res) => {
   // If a code is passed to exchange for access token, exchange it before ifUserLoggedIn attempts to use it
   if (req.query.code != undefined && req.query.state != undefined) {
     // if csrfToken is not valid, block the request
+    console.log(req.query.state);
+    console.log(req.csrfToken());
     if (req.query.state != req.csrfToken()){
       res.status(403).send("csrf token invalid!");
       return;
