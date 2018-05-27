@@ -172,7 +172,7 @@ function modifyDbServer(serverId, modification) {
 // Website
 app.set("view engine", "pug");
 app.use(require("body-parser").json());
-app.use(require("csurf"));
+app.use(require("csurf")());
 app.use(require("helmet")());
 app.set("trust proxy", 1);  // Trust NGINX
 app.use(session({
