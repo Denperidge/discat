@@ -331,12 +331,10 @@ app.post("/moduleupdate", (req, res) => {
 // Require csurf here so that the github webhooks don't use csrf
 app.use(require("csurf")());
 
-/*
 app.use(function (req, res, next) {
   res.locals.csrftoken = req.csrfToken();
   next();
 });
-*/
 
 app.get("/login", (req, res) => {
   // If a code is passed to exchange for access token, exchange it before ifUserLoggedIn attempts to use it
