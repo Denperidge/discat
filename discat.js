@@ -342,6 +342,7 @@ app.get("/login", (req, res) => {
     // if csrfToken is not valid, block the request
     console.log(req.query.state);
     console.log(req.csrfToken());
+    console.log(req.csrfToken());
     if (req.query.state != req.csrfToken()){
       res.status(403).send("csrf token invalid!");
       return;
@@ -353,9 +354,12 @@ app.get("/login", (req, res) => {
       res.redirect("/select");  // let him select server or user settings
     });
   }  // If user isn't logged in
-  else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /login
+  else {
+    //req.session.state = req.csrfToken();  // Create a csrfToken to 
+    res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /login
     "https://discordapp.com/api/oauth2/authorize?" +
     "client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Flogin&response_type=code&scope=guilds%20identify&state=" + req.csrfToken());
+  }
 });
 
 app.get("/logout", (req, res) => {
