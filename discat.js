@@ -320,6 +320,7 @@ function checkIfUserOwnsDiscatServer(id, req, res, successCallback) {
 
 app.get("/server", (req, res) => {
   checkIfUserOwnsDiscatServer(req.query.id, req, res, function () {
+    console.log(req);
     var serverId = req.query.id;
     dbServer.find({ id: serverId }, (err, servers) => {
       if (err) throw err;
