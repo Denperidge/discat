@@ -176,12 +176,12 @@ app.set("trust proxy", 1);  // Trust NGINX
 app.use(session({
   store: new MongoStore({ mongooseConnection: mongoose.connection }),
   secret: "kokop54sdf56fgfgs849fzer",
-  resave: false,
+  resave: false, 
   saveUninitialized: false,
   cookie: {
     maxAge: 864000000,  // User stays logged in for 10 days
-    //sameSite: true TODO sameSite and seure both cause errors
-    secure: true
+    secure: true,
+    sameSite: true
   }
 }));
 
