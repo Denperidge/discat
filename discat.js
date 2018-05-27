@@ -172,6 +172,7 @@ function modifyDbServer(serverId, modification) {
 // Website
 app.set("view engine", "pug");
 app.use(require("body-parser").json());
+app.use(require("csurf"));
 app.use(require("helmet")());
 app.set("trust proxy", 1);  // Trust NGINX
 app.use(session({
@@ -186,6 +187,11 @@ app.use(session({
     domain: ".discat.website"
   }
 }));
+
+app.use(function (req, res, next) {
+  res.locals.csrftoken = req.csrfToken();
+  next();
+});
 
 app.get("/login", (req, res) => {
   // If a code is passed to exchange for access token, exchange it before ifUserLoggedIn attempts to use it
