@@ -8,7 +8,7 @@
   },
   "author": "StijnDotExe",
   "dependencies": {
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.18.3",
     "connect-mongo": "^2.0.1",
     "discord.js": "^11.3.2",
     "erlpack": "github:discordapp/erlpack",
@@ -16,11 +16,11 @@
     "express-session": "^1.15.6",
     "helmet": "^3.12.1",
     "libsodium-wrappers": "^0.7.3",
-    "mongoose": "^5.0.17",
-    "node-opus": "^0.2.7",
+    "mongoose": "^5.1.2",
+    "node-opus": "^0.2.9",
     "pug": "^2.0.3",
-    "request": "^2.85.0",
-    "uws": "^9.14.0",
+    "request": "^2.87.0",
+    "uws": "^9.148.0",
     "zlib-sync": "^0.1.4"
   }
 }
