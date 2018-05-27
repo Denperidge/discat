@@ -177,13 +177,13 @@ app.set("trust proxy", 1);  // Trust NGINX
 app.use(session({
   store: new MongoStore({ mongooseConnection: mongoose.connection }),
   secret: "kokop54sdf56fgfgs849fzer",
-  //name: "sessionId",
   resave: false,
   saveUninitialized: false,
   cookie: {
     maxAge: 864000000,  // User stays logged in for 10 days
     secure: true,
-    sameSite: true
+    sameSite: true,
+    domain: ".discat.website"
   }
 }));
 
