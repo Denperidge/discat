@@ -463,13 +463,13 @@ function checkIfUserOwnsDiscatServer(id, req, res, successCallback) {
 
 app.get("/server", (req, res) => {
   checkIfUserOwnsDiscatServer(req.query.id, req, res, function () {
-    console.log(req.csrfToken());
     var serverId = req.query.id;
     dbServer.find({ id: serverId }, (err, servers) => {
       if (err) throw err;
       res.render("server", {
         server: servers[0],
         serverModule: true,
+        csrfToken: req.csrfToken()
       });
     });
   });
