@@ -172,11 +172,13 @@ function modifyDbServer(serverId, modification) {
 // Website
 app.set("view engine", "pug");
 app.use(require("body-parser").json());
+app.use(require("helmet")());
 app.set("trust proxy", 1);  // Trust NGINX
 app.use(session({
   store: new MongoStore({ mongooseConnection: mongoose.connection }),
   secret: "kokop54sdf56fgfgs849fzer",
-  resave: false, 
+  name: "dspfo56dfg456",
+  resave: false,
   saveUninitialized: false,
   cookie: {
     maxAge: 864000000,  // User stays logged in for 10 days
