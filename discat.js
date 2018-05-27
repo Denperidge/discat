@@ -338,7 +338,14 @@ app.use(function (req, res, next) {
 
 app.get("/login", (req, res) => {
   // If a code is passed to exchange for access token, exchange it before ifUserLoggedIn attempts to use it
-  if (req.query.code != undefined) exchangeToken(req, res, "authorization_code");
+  if (req.query.code != undefined && req.query.state != undefined) {
+    // if csrfToken is not valid, block the request
+    if (req.query.state != req.csrfToken()){
+      res.status(403).send("csrf token invalid!");
+      return;
+    }
+    exchangeToken(req, res, "authorization_code");
+  }
   else if (req.session.accessToken != null) {  // If user is logged in
     ifUserLoggedIn(req, res, () => {
       res.redirect("/select");  // let him select server or user settings
@@ -346,7 +353,7 @@ app.get("/login", (req, res) => {
   }  // If user isn't logged in
   else res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /login
     "https://discordapp.com/api/oauth2/authorize?" +
-    "client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Flogin&response_type=code&scope=guilds%20identify");
+    "client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Flogin&response_type=code&scope=guilds%20identify&state=" + req.csrfToken());
 });
 
 app.get("/logout", (req, res) => {
