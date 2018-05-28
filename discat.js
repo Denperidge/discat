@@ -15,6 +15,7 @@ clientId = require("./config.json").discat_client_id;
 clientSecret = require("./config.json").discat_client_secret;
 
 var commands = {};
+var config;  // Config needed by modules, for example api_keys, modules...
 var websiteModules;  // Modules to render on the website, not specific per server
 
 // Runs at startup and on server join/leave
@@ -39,6 +40,7 @@ function loadDiscatServers() {
 
 function loadWebsiteModules() {
   const fs = require("fs");
+  config = {};  // Reset config
 
   fs.readdir("discat-modules/modules/", (err, files) => {
     if (err) throw err;
@@ -61,6 +63,21 @@ function loadWebsiteModules() {
       if (fs.existsSync(__dirname + "/discat-modules/modules/" + moduleName + "/usersettings.pug"))
         websiteModule.hasusersettings = true;
       else websiteModule.hasusersettings = false;
+
+      if (require(__dirname.replace("mdk", "modules/") + modules[i] + "/module.js").getConfig != undefined) {
+        // Config the requires and api keys that every module needs
+        config[moduleName] = require(__dirname + "/discat-modules/modules/" + serverModuleName + "/module.js").getConfig();
+
+        // Check if anything needs to be get from discat config.json
+        var configKeys = Object.keys(config[modules[i]]);
+        for (var j = 0; j < configKeys.length; j++) {
+          // If value of a config parameter has GET_FROM_CONFIG
+          if (config[modules[i]][configKeys[j]] == "GET_FROM_CONFIG") {
+            // Get it's data from config.json and set it
+            config[modules[i]][configKeys[j]] = require("./config.json").third_party[configKeys[j]];
+          }
+        }
+      }
 
       newWebsiteModules.push(websiteModule);
     }
