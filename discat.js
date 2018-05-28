@@ -126,7 +126,7 @@ client.on('message', msg => {
   var guild; var reply;
   if (msg.author == client.user || commands[(guild = msg.guild.id)] == null) return;
   if ((reply = commands[guild][msg.content.toLowerCase().split(" ")[0]]) == null) return;
-  reply(msg);
+  reply(msg, config);
 });
 
 client.on('guildCreate', guild => {
