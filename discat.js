@@ -64,9 +64,9 @@ function loadWebsiteModules() {
         websiteModule.hasusersettings = true;
       else websiteModule.hasusersettings = false;
 
-      if (require(__dirname.replace("mdk", "modules/") + modules[i] + "/module.js").getConfig != undefined) {
+      if (require(__dirname + "/discat-modules/modules/" + moduleName + "/module.js").getConfig != undefined) {
         // Config the requires and api keys that every module needs
-        config[moduleName] = require(__dirname + "/discat-modules/modules/" + serverModuleName + "/module.js").getConfig();
+        config[moduleName] = require(__dirname + "/discat-modules/modules/" + moduleName + "/module.js").getConfig();
 
         // Check if anything needs to be get from discat config.json
         var configKeys = Object.keys(config[modules[i]]);
