@@ -69,12 +69,12 @@ function loadWebsiteModules() {
         config[moduleName] = require(__dirname + "/discat-modules/modules/" + moduleName + "/module.js").getConfig();
 
         // Check if anything needs to be get from discat config.json
-        var configKeys = Object.keys(config[modules[i]]);
+        var configKeys = Object.keys(config[moduleName]);
         for (var j = 0; j < configKeys.length; j++) {
           // If value of a config parameter has GET_FROM_CONFIG
-          if (config[modules[i]][configKeys[j]] == "GET_FROM_CONFIG") {
+          if (config[moduleName][configKeys[j]] == "GET_FROM_CONFIG") {
             // Get it's data from config.json and set it
-            config[modules[i]][configKeys[j]] = require("./config.json").third_party[configKeys[j]];
+            config[moduleName][configKeys[j]] = require("./config.json").third_party[configKeys[j]];
           }
         }
       }
