@@ -193,7 +193,7 @@ app.use(require("helmet")());
 app.set("trust proxy", 1);  // Trust NGINX
 app.use(session({
   store: new MongoStore({ mongooseConnection: mongoose.connection }),
-  secret: "kokop54sdf56fgfgs849fzer",
+  secret: require("./config.json").session_secret,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -630,7 +630,6 @@ app.get("/user", (req, res) => {
 
 
 // App
-
 app.listen(3000, () => {
   var date = new Date();
   var day = date.getDate();
