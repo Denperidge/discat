@@ -355,9 +355,10 @@ app.use(function (req, res, next) {
 
 app.get("/login", (req, res) => {
   // If a code is passed to exchange for access token, exchange it before ifUserLoggedIn attempts to use it
-  console.log(req.session.state);
   if (req.query.code != undefined && req.query.state != undefined) {
     // if csrfToken is not valid, block the request
+    console.log("session state " + req.session.state);
+    console.log("query " + req.query.state);
     if (req.query.state != req.session.state) {
       res.status(403).send("csrf token invalid!");
       return;
@@ -370,9 +371,9 @@ app.get("/login", (req, res) => {
     });
   }  // If user isn't logged in
   else {
-    console.log(req.csrfToken());
+    console.log("csrf: " + req.csrfToken());
     req.session.state = req.csrfToken();  // Use a csrfToken to check state
-    console.log(req.session.state);
+    console.log("session: " + req.session.state);
 
     res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /login
       "https://discordapp.com/api/oauth2/authorize?" +
