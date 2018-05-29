@@ -370,7 +370,10 @@ app.get("/login", (req, res) => {
     });
   }  // If user isn't logged in
   else {
+    console.log(req.csrfToken());
     req.session.state = req.csrfToken();  // Use a csrfToken to check state
+    console.log(req.session.state);
+
     res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /login
       "https://discordapp.com/api/oauth2/authorize?" +
       "client_id=432905547487117313&redirect_uri=https%3A%2F%2Fwww.discat.website%2Flogin&response_type=code&scope=guilds%20identify&state=" + req.session.state);
