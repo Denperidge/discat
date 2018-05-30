@@ -471,6 +471,10 @@ function ifUserLoggedIn(req, res, callback) {
           }
           else { res.redirect("/login"); }  // If user doesn't have a refreshtoken, re-authenticate
         }
+        else {
+          console.log(user.message);
+          return;
+        }
       }
 
       // Save user data in session
