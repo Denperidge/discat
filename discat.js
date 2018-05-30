@@ -360,7 +360,7 @@ app.get("/login", (req, res) => {
     console.log("session state " + req.session.state);
     console.log("query " + req.query.state);
     if (req.query.state != req.session.state) {
-      res.status(403).send("csrf token invalid!");
+      res.status(403).send("State invalid!");
       return;
     }
     exchangeToken(req, res, "authorization_code");
