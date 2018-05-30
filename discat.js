@@ -199,8 +199,8 @@ app.use(session({
   cookie: {
     maxAge: 864000000,  // User stays logged in for 10 days
     secure: true,
-    sameSite: true//,
-    //domain: ".discat.website"
+    sameSite: true,
+    domain: ".discat.website"
   }
 }));
 
