@@ -459,6 +459,7 @@ function ifUserLoggedIn(req, res, callback) {
           "Authorization": req.session.accessToken
         }
       }
+      console.log("Auth request sent!");
       request.get(options, (error, response, body) => {
         var user = JSON.parse(body);
   
