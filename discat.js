@@ -456,8 +456,7 @@ function ifUserLoggedIn(req, res, callback) {
     var options = {
       url: "https://discordapp.com/api/users/@me",
       headers: {
-        "Authorization": req.session.accessToken,
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Authorization": req.session.accessToken
       }
     }
     request.get(options, (error, response, body) => {
