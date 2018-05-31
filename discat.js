@@ -357,8 +357,6 @@ app.get("/login", (req, res) => {
   // If a code is passed to exchange for access token, exchange it before ifUserLoggedIn attempts to use it
   if (req.query.code != undefined && req.query.state != undefined) {
     // if csrfToken is not valid, block the request
-    console.log("session state " + req.session.state);
-    console.log("query " + req.query.state);
     if (req.query.state != req.session.state) {
       res.status(403).send("State invalid!");
       return;
@@ -371,9 +369,7 @@ app.get("/login", (req, res) => {
     });
   }  // If user isn't logged in
   else {
-    console.log("csrf: " + req.csrfToken());
     req.session.state = req.csrfToken();  // Use a csrfToken to check state
-    console.log("session: " + req.session.state);
 
     res.redirect(  // Redirect him to the Discord authentication, which will redirect back to /login
       "https://discordapp.com/api/oauth2/authorize?" +
@@ -530,7 +526,6 @@ app.patch("/saveserversettings", (req, res) => {
 });
 
 app.post("/addmodule", (req, res) => {
-  console.log(req);
   var serverId = req.body.Discord_Server_Id;
   // Check if user is authorized to access server settings
   checkIfUserOwnsDiscatServer(serverId, req, res, function () {
