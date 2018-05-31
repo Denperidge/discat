@@ -99,7 +99,7 @@ function loadCommands(serverId) {
 
       // Get the commands of each installed modules
       var commandsToAdd = require(__dirname + "/discat-modules/modules/" + serverModuleName + "/module.js").getCommands(
-        serverModules.filter(module => (module.name == serverModuleName))[0].settings);
+        serverModules[i].settings);
 
       // For each command of the module, add to the commands object
       for (var i = 0; i < commandsToAdd.length; i++)
