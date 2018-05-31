@@ -105,6 +105,7 @@ function loadCommands(serverId) {
       for (var i = 0; i < commandsToAdd.length; i++)
         commands[serverId][prefix + commandsToAdd[i].command] = commandsToAdd[i].reply;
     }
+    console.log(commands);
   });
 
 }
