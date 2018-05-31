@@ -92,12 +92,10 @@ function loadCommands(serverId) {
 
     var prefix = servers[0].prefix;  // Get the prefix used in that server
     var serverModules = servers[0].modules;  // Get the modules that server has installed
-    console.log(serverModules.length);
 
     // Scroll through servers' modules
     for (var i = 0; i < serverModules.length; i++) {
       var serverModuleName = serverModules[i].name;  // Name of module currently being handled
-      console.log("name: " + serverModuleName);
 
       // Get the commands of each installed modules
       var commandsToAdd = require(__dirname + "/discat-modules/modules/" + serverModuleName + "/module.js").getCommands(
@@ -107,7 +105,6 @@ function loadCommands(serverId) {
       for (var j = 0; j < commandsToAdd.length; j++)
         commands[serverId][prefix + commandsToAdd[j].command] = commandsToAdd[j].reply;
     }
-    console.log(commands);
   });
 
 }
