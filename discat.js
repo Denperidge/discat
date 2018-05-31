@@ -448,40 +448,54 @@ function ifUserLoggedIn(req, res, callback) {
   // If user has no accessToken, get one
   if (req.session.accessToken == null) res.redirect("/login");
   else {
-    // Else check if accessToken works by requesting user data
-    var options = {
-      url: "https://discordapp.com/api/users/@me",
-      headers: {
-        "Authorization": req.session.accessToken
-      }
-    }
-    request.get(options, (error, response, body) => {
-      var user = JSON.parse(body);
-
-      if (user.message != undefined) {  // If Discord returns a message, an error happened
-        if (user.message = "401: Unauthorized") {  // If the error is user not properly logged in
-          if (req.session.refreshToken != undefined) {  // Check for refresh token
-            // If user has refreshtoken, use it to re-authorize the user
-            exchangeToken(req, res, "refresh_token");
-          }
-          else { res.redirect("/login"); }  // If user doesn't have a refreshtoken, re-authenticate
-        }
-        else {
-          console.log(user.message);
-          return;
-        }
-      }
-
-      // Save user data in session
-      req.session.user = {
-        id: user.id,
-        username: user.username,
-        discriminator: user.discriminator,
-        avatar: user.avatar
-      };
+    // If accesstoken has recently been checked if it's working, let user do this thing
+    if (req.session.loggedin) {
       callback();
-    });
+    } else {
+      // Else check if accessToken works by requesting user data
+      var options = {
+        url: "https://discordapp.com/api/users/@me",
+        headers: {
+          "Authorization": req.session.accessToken
+        }
+      }
+      request.get(options, (error, response, body) => {
+        var user = JSON.parse(body);
+  
+        if (user.message != undefined) {  // If Discord returns a message, an error happened
+          if (user.message = "401: Unauthorized") {  // If the error is user not properly logged in
+            if (req.session.refreshToken != undefined) {  // Check for refresh token
+              // If user has refreshtoken, use it to re-authorize the user
+              exchangeToken(req, res, "refresh_token");
+            }
+            else { res.redirect("/login"); }  // If user doesn't have a refreshtoken, re-authenticate
+          }
+          else {
+            console.log(user.message);
+            return;
+          }
+        }
+  
+        // Save user data in session
+        req.session.user = {
+          id: user.id,
+          username: user.username,
+          discriminator: user.discriminator,
+          avatar: user.avatar
+        };
+
+        req.session.loggedin = true;
+        // After 2 minutes, assume the user is no longer logged in and check for access token again
+        setTimeout(expireLoggedin, 120000);
+
+        callback();
+      });
+    }
   }
+}
+
+function expireLoggedin(){
+  req.session.loggedin = false;
 }
 
 function checkIfUserOwnsDiscatServer(id, req, res, successCallback) {
