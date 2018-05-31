@@ -92,7 +92,7 @@ function loadCommands(serverId) {
 
     var prefix = servers[0].prefix;  // Get the prefix used in that server
     var serverModules = servers[0].modules;  // Get the modules that server has installed
-    console.log(serverModules);
+    console.log(serverModules.length);
 
     // Scroll through servers' modules
     for (var i = 0; i < serverModules.length; i++) {
@@ -104,8 +104,8 @@ function loadCommands(serverId) {
         serverModules[i].settings);
 
       // For each command of the module, add to the commands object
-      for (var i = 0; i < commandsToAdd.length; i++)
-        commands[serverId][prefix + commandsToAdd[i].command] = commandsToAdd[i].reply;
+      for (var j = 0; j < commandsToAdd.length; j++)
+        commands[serverId][prefix + commandsToAdd[j].command] = commandsToAdd[j].reply;
     }
     console.log(commands);
   });
