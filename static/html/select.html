@@ -5,25 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Discat</title>
     <link rel="stylesheet" href="stylesheet.css">
-   
 </head>
 
 <body>
+    <div id="topbar">
+        <a href="/logout"><button id="logout">Logout</button></a>
+    </div>
     
-    <a href="/logout">
-        <button id="logout">Logout</button>
-    </a>
-    <div>
-            <img id="discatp2" src="cool.png">
-        </div>
-   <center> <h1 id="select">Select settings</h1></center>
+    <div id="discat"><img src="discat.png"/></div>
+    <h1 id="title">Select settings</h1>
     <div id="selection">
-        <a id="userset" href="user">
-            <div id="buttontxtuser">User settings</div>
-        </a>
-        <a id="serverset" href="servers">
-            <div id="buttontxtserver"> Server settings</div>
-        </a>
+        <a href="user" class="option"><button>User settings</button></a>
+        <a href="servers" class="option"><button>Server settings</button></a>
     </div>
 </body>
 
