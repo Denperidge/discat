@@ -29,6 +29,14 @@ body {
   border: none;
 }
 
+#discattopbar img {
+  height: 90%;
+  width: auto;
+
+  float: left;
+  margin-left: 5px;
+}
+
 #topbar button:hover {
   box-shadow: -1px -1px 20px inset;
 }
