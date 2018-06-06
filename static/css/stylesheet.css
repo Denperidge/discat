@@ -1,7 +1,9 @@
 body {
-    font-family: sans-serif;
+    width: 1920px;
+    height: 1080px;
+    font-family: Arial;
     margin: 0;
-    background-color: #d9edff;
+    background-color: #363a3f;
 }
 
 #selection {
@@ -41,4 +43,105 @@ a {
     border-radius: 5%;
 
     z-index: 1;
+}
+#topdis{
+  background-color: rgb(233, 194, 23);
+  left: -3px;
+  top: 0px;
+  width: 1668px;
+  height: 65px;
+  z-index: 6;
+
+}
+#logout {
+
+  background-color: rgb(233, 194, 23);
+  float: right;
+  top: 0px;
+  width: 250px;
+  height: 65px;
+  z-index: 12;
+    font-size: 25px;
+}
+#logout:hover {
+    color: aqua;
+}
+#select {
+
+  font-size: 144px;
+  font-family: "Arial";
+  color: rgb(233, 194, 23);
+  line-height: 0.318;
+  text-align: justifyAll;
+  -moz-transform: matrix( 0.54965265834876,0,0,0.57858174563027,0,0);
+  -webkit-transform: matrix( 0.54965265834876,0,0,0.57858174563027,0,0);
+  -ms-transform: matrix( 0.54965265834876,0,0,0.57858174563027,0,0);
+
+  z-index: 7;
+
+
+}
+        
+
+#serverset{
+
+  border-radius: 10px;
+  background-color: rgb(233, 194, 23);
+  left: 300px;
+  top: 700px;
+  width: 500px;
+  height: 100px;
+  z-index: 3;
+}
+
+
+
+#userset{
+  border-radius: 10px;
+  background-color: rgb(233, 194, 23);
+  left: 300px;
+  top: 700px;
+  width: 500px;
+  height: 100px;
+  z-index: 3;
+
+
+}
+#discatp2{
+    margin-top: 200px;
+    margin-left: 800px;
+  border-radius: 50%;
+  width: 321px;
+  height: 321px;
+  z-index: 5;
+}
+#buttontxtuser{
+    margin-top: 35px;
+  font-size: 100px;
+  font-family: "Arial";
+  color: rgb(54, 58, 63);
+  text-align: justifyAll;
+  -moz-transform: matrix( 0.54965265834876,0,0,0.57858174563027,0,0);
+  -webkit-transform: matrix( 0.54965265834876,0,0,0.57858174563027,0,0);
+  -ms-transform: matrix( 0.54965265834876,0,0,0.57858174563027,0,0);
+  position: absolute;
+  left: 190px;
+  top: 735px;
+  z-index: 10;
+}
+
+#buttontxtserver{
+margin-top: 35px;
+  font-size:100px;
+  font-family: "Arial";
+  color: rgb(54, 58, 63);
+  text-align: justifyAll;
+  -moz-transform: matrix( 0.54965265834876,0,0,0.57858174563027,0,0);
+  -webkit-transform: matrix( 0.54965265834876,0,0,0.57858174563027,0,0);
+  -ms-transform: matrix( 0.54965265834876,0,0,0.57858174563027,0,0);
+  position: absolute;
+  left: 1105px;
+  top: 735px;
+  z-index: 9;
+
 }
