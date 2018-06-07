@@ -29,12 +29,13 @@ body {
   border: none;
 }
 
-#discattopbar img {
+#discattopbar button {
+  float: left;
+}
+
+#discattopbar button img {
   height: 90%;
   width: auto;
-
-  float: left;
-  margin-left: 5px;
 }
 
 #topbar button:hover {
