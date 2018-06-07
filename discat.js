@@ -378,7 +378,9 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/select", (req, res) => {
-  res.render("select", { user: req.session.user });
+  ifUserLoggedIn(req, res, () => {
+    res.render("select", { user: req.session.user });
+  });
 });
 
 app.get("/logout", (req, res) => {
