@@ -1,0 +1,13 @@
+div#topbar
+    a#discattopbar(href="/")
+        button
+            img(src="discattopbar.png?v=0.2")
+    button#accountbar(onclick="OpenAccountDropDown();")
+        div#accountbaravatar
+            img(src=user.avatar)
+        span#accountbarusername #{user.username + "#" + user.discriminator}
+
+div#accountbardropdown
+    div#accountbardropdownusername #{user.username}
+    span#accountbardropdowndiscriminator #{user.discriminator}
+    div#logout Logout

@@ -1,0 +1,19 @@
+head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title= "Discat"
+    link(rel="stylesheet" href="stylesheet.css?v=0.2")
+
+body
+    include topbar.pug
+
+    div#discat
+        img(src="discat.png?v=0.2")
+    h1#title Select settings
+    div#selection
+        a(href="user" class="option")
+            button User settings
+        a(href="servers" class="option")
+            button Server settings
+    
+    script(src="functions.js")

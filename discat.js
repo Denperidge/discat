@@ -377,6 +377,10 @@ app.get("/login", (req, res) => {
   }
 });
 
+app.get("/select", (req, res) => {
+  res.render("select", req.session.user);
+});
+
 app.get("/logout", (req, res) => {
   req.session.accessToken = null;
   res.redirect("/");
