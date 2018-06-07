@@ -25,12 +25,12 @@ function Focus(parent, opacity, clickthrough, instantFireCallback, callback) {
 
 
     overlay.onclick = function (e) {
-        if (clickthrough){
+        if (clickthrough) {
             // When user clicks overlay (thus closing parent), fire click event as if overlay was never there if desired
             overlay.style.pointerEvents = "none";
-            document.elementFromPoint(e.clientX, e.clientY).click();
+            if (e != undefined) document.elementFromPoint(e.clientX, e.clientY).click();
         }
-        
+
         clearInterval(fadeIn);  // If fadein couldn't finish, make sure it doesn't try to
         if (instantFireCallback) callback();
 
@@ -46,3 +46,26 @@ function Focus(parent, opacity, clickthrough, instantFireCallback, callback) {
 
     document.body.appendChild(overlay);
 }
+
+var timeOut;
+function OpenAccountDropdown() {
+    clearTimeout(timeOut);
+    var accountbardropdown = document.getElementById("accountbardropdown");
+    if (accountbardropdown.offsetHeight == 0) {
+
+        accountbardropdown.style.display = "flex";
+        accountbardropdown.style.width = document.getElementById("accountbar").offsetWidth;
+        accountbardropdown.style.height = "auto";
+
+        Focus(accountbardropdown, 0, true, true, function () {
+            var accountbardropdown = document.getElementById("accountbardropdown")
+            accountbardropdown.style.height = "0px";
+            clearTimeout(timeOut);
+            timeOut = setTimeout(function () {
+                accountbardropdown.style.display = "none";
+            }, 1000);
+        });
+    }
+}
+
+window.onresize = function () { if (document.getElementById("overlay") != null) document.getElementById("overlay").onclick(); };

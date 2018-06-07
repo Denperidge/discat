@@ -9,6 +9,7 @@ body {
 #topbar {
   width: 100%;
   height: 48px;
+
   color: #363a3f;
   background-color: #e9c217;
 
@@ -19,7 +20,6 @@ body {
   color: #363a3f;
   background-color: #e9c217;
 
-  width: 250px;
   height: 100%;
 
   font-size: 25px;
@@ -27,6 +27,10 @@ body {
   text-align: center;
   cursor: pointer;
   border: none;
+}
+
+#topbar button:hover {
+  box-shadow: -1px -1px 20px inset;
 }
 
 #discattopbar button {
@@ -38,13 +42,71 @@ body {
   width: auto;
 }
 
-#topbar button:hover {
-  box-shadow: -1px -1px 20px inset;
+#accountbar {
+  float: right;
+  display: flex;
+  align-items: center; 
 }
 
+#accountbaravatar {
+  height: 100%;
+  width: auto;
+  border-radius: 50%;
+  overflow: hidden;
+  float: left;
+}
+
+#accountbaravatar img {
+  height: 100%;
+  width: auto;
+}
+
+#accountbardropdown {
+  color: #363a3f;
+  background-color: #e9c217;
+
+  height: 0px;
+  display: none;
+
+  top: -50px;
+  float: right;
+  
+  transition: height 1s;
+  overflow: hidden;
+  
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#accountbardropdown div { 
+  width: 100%;
+  padding-top: 10px;
+  word-wrap: break-word;
+}
 
 #logout {
-  float: right;
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+
+#accountbardropdownusername {
+  padding: 10px 0px 0px 0px;
+  display: none;
+}
+
+#accountbardropdownusername, #accountbardropdowndiscriminator {
+  display: none;
+}
+
+@media (max-width: 610px) {
+  #accountbarusername {
+    display: none;
+  }
+
+  #accountbardropdownusername, #accountbardropdowndiscriminator {
+    display: block;
+  }
 }
 
 #discat {

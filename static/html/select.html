@@ -10,7 +10,15 @@
 <body>
     <div id="topbar">
         <a href="/" id="discattopbar"><button><img src="discattopbar.png?v=0.1"/></button></a>
-        <a href="/logout"><button id="logout">Logout</button></a>
+        <button id="accountbar" onclick="OpenAccountDropdown();">
+            <div id="accountbaravatar"><img src="https://cdn.discordapp.com/avatars/102473488773709824/01ccf5f489653bb70899ea7c5aebf38c.png"/></div>
+            <span id="accountbarusername">Sir Cattingham The fifty-secondd#7655</span>
+        </button>
+    </div>
+    <div id="accountbardropdown">
+        <div id="accountbardropdownusername">Sir Cattingham The fifty-secondd</div>
+        <span id="accountbardropdowndiscriminator">#7655</span>
+        <div id="logout">Logout</div>
     </div>
     
     <div id="discat"><img src="discat.png?v=0.1"/></div>
@@ -19,6 +27,8 @@
         <a href="user" class="option"><button>User settings</button></a>
         <a href="servers" class="option"><button>Server settings</button></a>
     </div>
+
+    <script src="functions.js"></script>
 </body>
 
 </html>
