@@ -2,6 +2,7 @@ head
     title= "Select server"
     link(href="stylesheet.css" rel="stylesheet")
 body
+  include topbar.pug
     h1= "Select server to configure"
     div#selection
         - for (var i=0; i < servers.length; i++)
