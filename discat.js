@@ -444,6 +444,7 @@ app.get("/servers", (req, res) => {
       req.session.ownedServers = ownedServers;
 
       res.render("servers", {
+        user: req.session.user,
         servers: serversToPush
       });
     });
@@ -519,6 +520,7 @@ app.get("/server", (req, res) => {
     dbServer.find({ id: serverId }, (err, servers) => {
       if (err) throw err;
       res.render("server", {
+        user: req.session.user,
         server: servers[0],
         serverModule: true,
         csrfToken: req.csrfToken()
@@ -646,6 +648,7 @@ app.patch("/moduleserversettings", (req, res) => {
 app.get("/user", (req, res) => {
   if (ifUserLoggedIn(req, res, () => {
     res.render("user", {
+      user: req.session.user,
       modules: websiteModules.filter(websiteModule => (websiteModule.hasusersettings == true)),
       userModule: true
     });
