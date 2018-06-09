@@ -1,17 +1,20 @@
 head
     title= "Select server"
     link(href="stylesheet.css" rel="stylesheet")
+    style
+      include servers.css
 body
   include topbar.pug
     h1= "Select server to configure"
     div#selection
         - for (var i=0; i < servers.length; i++)
           a(href="/server?id=" + servers[i].id)
-            div(class="server")
-              if servers[i].icon !== null
-                img(src="https://cdn.discordapp.com/icons/" + servers[i].id +"/" + servers[i].icon + ".png")
-              br
-              span #{servers[i].name}
+            div(class="option")
+              button(class="test")
+                if servers[i].icon !== null
+                  img(src="https://cdn.discordapp.com/icons/" + servers[i].id +"/" + servers[i].icon + ".png")
+                  br
+                span #{servers[i].name}
         a(href="https://discordapp.com/api/oauth2/authorize?client_id=432905547487117313&permissions=18432&scope=bot" target="_blank")
           div(class="server")
             br
