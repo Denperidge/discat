@@ -1,7 +1,16 @@
+#selection {
+    display: flex;
+    align-items: flex-start;
+    height: 80%;
+}
+
 .option button {
-    height: auto;
+    height: 150px;
 }
 
 .option button img {
+	height: 100px;
+    width: auto;
+
     margin: 5px;
 }
