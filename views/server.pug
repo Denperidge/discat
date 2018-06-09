@@ -16,8 +16,8 @@ body(id=server.id)
     div#selection
         - var modules = server.modules;
         include modules.pug
-        a(onclick="showAvailableModules();")
-            div 
+        a(class="module" onclick="showAvailableModules();")
+            div(class="option")
                 span Add module
     script(src="functions.js")
     script(src="server.js")
