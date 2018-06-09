@@ -1,7 +1,7 @@
 - for (var i=0; i < modules.length; i++)
     a(class="module")
-        div
-            h1 #{modules[i].name}
+        div(class="option")
+            h3 #{modules[i].name}
             span #{modules[i].description}
             if serverModule
                 if modules[i].hasserversettings

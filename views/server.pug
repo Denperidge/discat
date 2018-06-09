@@ -6,12 +6,13 @@ body(id=server.id)
     include topbar.pug
     h1= "Server config"
     div#menu
-    div#settings
+    div#serversettings
         if server.prefix != null
             input#prefix(type="text" placeholder="prefix" value=server.prefix)
         else
             input#prefix(type="text" placeholder="prefix")
         button(onclick="saveServerSettings();") Save
+    h2 Modules
     div#selection
         - var modules = server.modules;
         include modules.pug
