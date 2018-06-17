@@ -2,7 +2,21 @@
     margin: 20px 0px;
 }
 
-.module {
-    flex-grow: 1;
+#selection {
+    align-items: flex-start; 
 }
 
+.module {
+    width: 200px;
+
+    margin: 50px;
+    padding: 10px;
+    flex-grow: 1;
+    
+    border: 1px #e9c217 groove;
+}
+
+.option button {
+    width: 180px;
+    margin: 10px auto;
+}
