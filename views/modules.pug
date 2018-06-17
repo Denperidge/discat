@@ -8,6 +8,7 @@
                     button(onclick="openModuleSettings(\"" + modules[i].name + "\");") Settings
                 button(onclick="removeModule(\"" + modules[i].name + "\");") Remove
             else if userModule
+                br
                 button(onclick="openModuleSettings(\"" + modules[i].name + "\");") Settings
             else
                 button(onclick="addModule(\"" + modules[i].name + "\");") Add module to server
