@@ -2,7 +2,6 @@
     a(class="module")
         div(class="option")
             h3 #{modules[i].name}
-            span #{modules[i].description}
             if serverModule
                 if modules[i].hasserversettings
                     button(onclick="openModuleSettings(\"" + modules[i].name + "\");") Settings
@@ -11,4 +10,6 @@
                 button(onclick="openModuleSettings(\"" + modules[i].name + "\");") Settings
                 br
             else
+                span #{modules[i].description}
+                br
                 button(onclick="addModule(\"" + modules[i].name + "\");") Add module to server
