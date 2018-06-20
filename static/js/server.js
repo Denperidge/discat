@@ -8,7 +8,6 @@ function openMenu() {
     var menu = document.getElementById("menu");
     Focus(menu, 0.5, false, true, function () {
         menu.style.visibility = "hidden";
-        menu.style.height = "0%";
         menu.innerHTML = "";
     });
     menu.style.visibility = "visible";
