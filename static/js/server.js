@@ -12,7 +12,6 @@ function openMenu() {
         menu.innerHTML = "";
     });
     menu.style.visibility = "visible";
-    menu.style.height = "80%";
 }
 
 function showAvailableModules() {

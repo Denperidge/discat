@@ -144,8 +144,30 @@ body {
 }
 
 #menu {
-  left: 50px;
-  top: 50px;
-  right: 50px;
-  bottom: 50px;
+  left: 200px;
+  top: 200px;
+  right: 200px;
+  bottom: 200px;
+
+  min-width: 300px;
+
+  background-color: #363a3f;
+  opacity: 0.97;
+}
+
+#menu .module {
+  border: none;
+}
+
+#menu .module .option button {
+font-size: 18px;
+}
+
+@media (max-width: 900px) {
+  #menu {
+    left: 75px;
+    top: 75px;
+    right: 75px;
+    bottom: 75px;
+  }
 }
