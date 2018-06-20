@@ -87,6 +87,9 @@ body {
 
 #logout {
   padding-bottom: 10px;
+
+  color: #363a3f;
+  text-decoration: none;
   cursor: pointer;
 }
 
