@@ -384,7 +384,7 @@ app.get("/select", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  req.session.accessToken = null;
+  req.session.destroy();
   res.redirect("/");
 });
 
